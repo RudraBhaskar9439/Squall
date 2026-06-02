@@ -17,3 +17,18 @@ export const DECIMALS = { dusdc: 6, vstrata: 9 } as const;
 export const OFFSET_POW = 1000;
 
 export const EXPLORER = "https://suiscan.xyz/testnet/object";
+
+export const WALRUS_AGGREGATOR = "https://aggregator.walrus-testnet.walrus.space";
+export const walrusUrl = (blobId: string) => `${WALRUS_AGGREGATOR}/v1/blobs/${blobId}`;
+
+export type TrackEntry = {
+  epoch: number;
+  tsMs: number;
+  navAssets: number;
+  totalShares: number;
+  idle: number;
+  deployed: number;
+  volIndex: number;
+  rationale: string;
+  blobId: string;
+};

@@ -34,7 +34,6 @@ export function VaultDashboard() {
     id: STRATA.vault,
     options: { showContent: true },
   });
-  const supplyQ = useSuiClientQuery("getTotalSupply", { coinType: TYPES.vstrata });
   const dusdcQ = useSuiClientQuery(
     "getBalance",
     { owner: account?.address ?? "", coinType: TYPES.dusdc },
@@ -48,7 +47,6 @@ export function VaultDashboard() {
 
   const refetchAll = () => {
     vaultQ.refetch();
-    supplyQ.refetch();
     dusdcQ.refetch();
     vstrataQ.refetch();
   };
@@ -58,7 +56,8 @@ export function VaultDashboard() {
   const idle = fields ? pu64(fields.idle) : 0;
   const deployed = fields ? pu64(fields.deployed_value) : 0;
   const totalAssets = idle + deployed;
-  const totalShares = supplyQ.data ? Number(supplyQ.data.value) : 0;
+  const treasury = fields?.treasury as { fields?: { total_supply?: unknown } } | undefined;
+  const totalShares = pu64(treasury?.fields?.total_supply);
   const userVstrata = vstrataQ.data ? Number(vstrataQ.data.totalBalance) : 0;
   const userDusdc = dusdcQ.data ? Number(dusdcQ.data.totalBalance) : 0;
   const positionValue =

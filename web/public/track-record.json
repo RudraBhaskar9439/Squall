@@ -1,0 +1,37 @@
+{
+  "entries": [
+    {
+      "epoch": 0,
+      "tsMs": 1780368223481,
+      "navAssets": 50000000,
+      "totalShares": 50000000000,
+      "idle": 50000000,
+      "deployed": 0,
+      "volIndex": 650000,
+      "rationale": "Initial deposit — 50 DUSDC seeded into the vault",
+      "blobId": "-3WWFdkd3S3zX9jNMyFF5OUZMJXBm6sL3393sCZ2Vkk"
+    },
+    {
+      "epoch": 1,
+      "tsMs": 1780368259294,
+      "navAssets": 50000000,
+      "totalShares": 50000000000,
+      "idle": 20000000,
+      "deployed": 30000000,
+      "volIndex": 650000,
+      "rationale": "Supplied 30 DUSDC into DeepBook Predict PLP — earning option-seller premium",
+      "blobId": "4yJTHbcHrUvYDyuLO3axVXvNTM272IZzKzSTmd_0D6I"
+    },
+    {
+      "epoch": 2,
+      "tsMs": 1780368304754,
+      "navAssets": 50050000,
+      "totalShares": 50000000000,
+      "idle": 20000000,
+      "deployed": 30050000,
+      "volIndex": 650000,
+      "rationale": "Keeper harvest — PLP marked to current value, NAV +0.05 DUSDC premium",
+      "blobId": "wXThOXBgKzbySXm8JGuRF0RhLV8n6Rv-k_Uz2smtUsY"
+    }
+  ]
+}

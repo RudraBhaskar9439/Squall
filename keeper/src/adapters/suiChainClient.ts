@@ -57,10 +57,9 @@ export class SuiChainClient implements ChainClient {
     const fields = (content && "fields" in content ? content.fields : {}) as Record<string, unknown>;
     const idle = pu64(fields.idle);
     const deployed = pu64(fields.deployed_value);
-    const supply = await this.client.getTotalSupply({
-      coinType: `${STRATA.package}::vstrata::VSTRATA`,
-    });
-    const totalShares = Number(supply.value);
+    // TreasuryCap is wrapped in the Vault, so read total supply from its field.
+    const treasury = fields.treasury as { fields?: { total_supply?: unknown } } | undefined;
+    const totalShares = pu64(treasury?.fields?.total_supply);
     return { idle, deployed, totalAssets: idle + deployed, totalShares };
   }
 
