@@ -42,8 +42,8 @@ strata/
 │   └── tests/              # Move unit tests (+ mock_strategy harness)
 ├── packages/sdk/         # @strata/sdk: SVI vol math + testnet constants ✅
 ├── keeper/               # off-chain automation (vol-index updater, mock+sui clients) ✅ skeleton
-├── web/                  # Next.js frontend (zkLogin + dapp-kit) — TODO
-└── sim/                  # strategy backtest / simulation — TODO
+├── web/                  # Next.js frontend (landing + dashboard + proof + backtest) ✅
+└── sim/                  # strategy backtest (naive vs hedged + Monte Carlo) ✅
 ```
 
 The Move design keeps the **vault core generic** (`Vault<A, S>`) so it works with
