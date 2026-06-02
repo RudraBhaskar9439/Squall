@@ -1,0 +1,18 @@
+{
+  "name": "@strata/keeper",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-transform-types --test test/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "start": "node --experimental-transform-types src/index.ts"
+  },
+  "dependencies": {
+    "@strata/sdk": "workspace:*",
+    "@mysten/sui": "^1.30.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  }
+}

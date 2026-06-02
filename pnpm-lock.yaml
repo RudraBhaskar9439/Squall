@@ -8,6 +8,19 @@ importers:
 
   .: {}
 
+  keeper:
+    dependencies:
+      '@mysten/sui':
+        specifier: ^1.30.0
+        version: 1.45.2(typescript@5.9.3)
+      '@strata/sdk':
+        specifier: workspace:*
+        version: link:../packages/sdk
+    devDependencies:
+      typescript:
+        specifier: ^5.6.0
+        version: 5.9.3
+
   packages/sdk:
     dependencies:
       '@mysten/sui':
