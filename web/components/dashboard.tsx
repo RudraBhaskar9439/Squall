@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import { STRATA, TYPES, DECIMALS, OFFSET_POW, txUrl } from "@/lib/strata";
 import { useToast } from "./toast";
 
-// Extract a u64 from a possibly-nested object content field.
 function pu64(f: unknown): number {
   if (f == null) return 0;
   if (typeof f === "string" || typeof f === "number") return Number(f);
@@ -21,7 +20,7 @@ function pu64(f: unknown): number {
   return 0;
 }
 
-const fmt = (base: number, dec: number, max = 4) =>
+const fmt = (base: number, dec: number, max = 2) =>
   (base / 10 ** dec).toLocaleString(undefined, { maximumFractionDigits: max });
 
 type Activity = { id: number; action: string; detail: string; digest: string };
@@ -33,11 +32,18 @@ export function VaultDashboard() {
   const [deposit, setDeposit] = useState("");
   const [withdraw, setWithdraw] = useState("");
   const [activity, setActivity] = useState<Activity[]>([]);
+  const [showDetails, setShowDetails] = useState(false);
+  const [apy, setApy] = useState<number | null>(null);
 
   useEffect(() => {
     const s = localStorage.getItem("strata-activity");
     if (s) setActivity(JSON.parse(s));
+    fetch("/simulation.json")
+      .then((r) => r.json())
+      .then((d) => setApy(d?.monteCarlo?.hedged?.apy ?? null))
+      .catch(() => {});
   }, []);
+
   function logActivity(action: string, detail: string, digest: string) {
     setActivity((prev) => {
       const next = [{ id: Date.now(), action, detail, digest }, ...prev].slice(0, 6);
@@ -76,11 +82,11 @@ export function VaultDashboard() {
   const positionValue =
     totalShares > 0 ? Math.floor((userVstrata * (totalAssets + 1)) / (totalShares + OFFSET_POW)) : 0;
 
-  // previews (plain-language "you'll get")
   const depBase = Math.floor((parseFloat(deposit) || 0) * 10 ** DECIMALS.dusdc);
   const previewShares = depBase > 0 ? (depBase * (totalShares + OFFSET_POW)) / (totalAssets + 1) : 0;
   const wdBase = Math.floor((parseFloat(withdraw) || 0) * 10 ** DECIMALS.vstrata);
-  const previewAssets = wdBase > 0 && totalShares > 0 ? (wdBase * (totalAssets + 1)) / (totalShares + OFFSET_POW) : 0;
+  const previewAssets =
+    wdBase > 0 && totalShares > 0 ? (wdBase * (totalAssets + 1)) / (totalShares + OFFSET_POW) : 0;
 
   function send(tx: Transaction, action: string, detail: string, clear: () => void) {
     toast.push({ variant: "info", title: `${action}…`, desc: detail });
@@ -107,7 +113,7 @@ export function VaultDashboard() {
       arguments: [tx.object(STRATA.vault), coinWithBalance({ type: TYPES.dusdc, balance: BigInt(depBase) })],
     });
     tx.transferObjects([shares], account.address);
-    send(tx, "Deposit", `${deposit} DUSDC`, () => setDeposit(""));
+    send(tx, "Deposit", `${deposit} USDC`, () => setDeposit(""));
   }
 
   function runWithdraw() {
@@ -119,40 +125,50 @@ export function VaultDashboard() {
       arguments: [tx.object(STRATA.vault), coinWithBalance({ type: TYPES.vstrata, balance: BigInt(wdBase) })],
     });
     tx.transferObjects([out], account.address);
-    send(tx, "Withdraw", `${withdraw} vSTRATA`, () => setWithdraw(""));
+    send(tx, "Withdraw", `${withdraw} shares`, () => setWithdraw(""));
   }
 
   return (
     <div className="flex h-full flex-col rounded-3xl border border-white/10 bg-white/[0.03] p-8">
+      {/* header */}
       <div className="flex items-start justify-between gap-3">
         <div>
-          <div className="text-sm text-white/50">Premium-Harvest Vault</div>
-          <div className="mt-1 text-2xl font-semibold">vSTRATA</div>
-          <p className="mt-1 text-xs text-white/45">
-            Deposit DUSDC, earn yield from DeepBook Predict, withdraw anytime.
+          <div className="text-2xl font-semibold">Earn on Predict</div>
+          <p className="mt-1 text-sm text-white/55">
+            Deposit USDC. The vault is the house — it earns a share of trading fees. Withdraw anytime.
           </p>
         </div>
         <ConnectButton />
       </div>
 
-      {/* live stats in plain language */}
-      <div className="mt-6 grid grid-cols-2 gap-3">
-        <Stat label="Total deposited (TVL)" value={`${fmt(totalAssets, DECIMALS.dusdc)} DUSDC`} />
-        <Stat label="Earning in Predict" value={`${fmt(deployed, DECIMALS.dusdc)} DUSDC`} />
-        <Stat label="Your balance" value={`${fmt(positionValue, DECIMALS.dusdc)} DUSDC`} highlight />
-        <Stat label="Your shares" value={`${fmt(userVstrata, DECIMALS.vstrata)} vSTRATA`} />
+      {/* honest APY chip */}
+      <div className="mt-5 flex flex-wrap items-center gap-2">
+        <a
+          href="/#sim"
+          className="rounded-full border border-teal/30 bg-teal/5 px-3 py-1.5 text-xs text-teal hover:bg-teal/10"
+        >
+          ~{apy != null ? Math.round(apy * 100) : 17}% APY · backtested
+        </a>
+        <span className="rounded-full border border-white/10 px-3 py-1.5 text-xs text-white/40">
+          hedged · not a guarantee, you can lose
+        </span>
+      </div>
+
+      {/* the two numbers that matter */}
+      <div className="mt-5 grid grid-cols-2 gap-3">
+        <Big label="Your balance" value={`${fmt(positionValue, DECIMALS.dusdc)}`} unit="USDC" highlight />
+        <Big label="Total deposited" value={`${fmt(totalAssets, DECIMALS.dusdc)}`} unit="USDC" />
       </div>
 
       {!account ? (
         <p className="mt-6 rounded-xl border border-white/10 bg-white/[0.02] p-4 text-sm text-white/55">
-          👋 Connect a Sui wallet (on <b>testnet</b>) to deposit. You&apos;ll receive vSTRATA shares
-          that represent your slice of the vault and grow as it earns.
+          👋 Connect a Sui wallet (testnet) to start earning.
         </p>
       ) : (
         <div className="mt-6 space-y-4">
           <Field
             label="Deposit"
-            unit="DUSDC"
+            unit="USDC"
             balanceText={`balance ${fmt(userDusdc, DECIMALS.dusdc)}`}
             value={deposit}
             onChange={setDeposit}
@@ -160,11 +176,11 @@ export function VaultDashboard() {
             action="Deposit"
             onAction={runDeposit}
             disabled={isPending}
-            hint={previewShares > 0 ? `You'll receive ≈ ${fmt(previewShares, DECIMALS.vstrata)} vSTRATA` : "Earn the option-seller premium from the Predict PLP pool"}
+            hint={previewShares > 0 ? `You'll get ≈ ${fmt(previewShares, DECIMALS.vstrata)} shares` : "Start earning a share of the vault"}
           />
           <Field
             label="Withdraw"
-            unit="vSTRATA"
+            unit="shares"
             balanceText={`balance ${fmt(userVstrata, DECIMALS.vstrata)}`}
             value={withdraw}
             onChange={setWithdraw}
@@ -172,8 +188,24 @@ export function VaultDashboard() {
             action="Withdraw"
             onAction={runWithdraw}
             disabled={isPending}
-            hint={previewAssets > 0 ? `You'll receive ≈ ${fmt(previewAssets, DECIMALS.dusdc)} DUSDC` : "Burn shares to get your DUSDC back"}
+            hint={previewAssets > 0 ? `You'll get back ≈ ${fmt(previewAssets, DECIMALS.dusdc)} USDC` : "Cash out anytime"}
           />
+        </div>
+      )}
+
+      {/* details for the curious (hidden by default) */}
+      <button
+        onClick={() => setShowDetails((s) => !s)}
+        className="mt-6 self-start text-xs text-white/40 hover:text-white/70"
+      >
+        {showDetails ? "Hide details ▲" : "Under the hood ▾"}
+      </button>
+      {showDetails && (
+        <div className="mt-3 grid grid-cols-2 gap-3 text-xs">
+          <Detail label="Idle (not deployed)" value={`${fmt(idle, DECIMALS.dusdc)} USDC`} />
+          <Detail label="Earning in Predict PLP" value={`${fmt(deployed, DECIMALS.dusdc)} USDC`} />
+          <Detail label="Your shares (vSTRATA)" value={fmt(userVstrata, DECIMALS.vstrata)} />
+          <Detail label="Share price" value={totalShares > 0 ? (totalAssets / 10 ** DECIMALS.dusdc / (totalShares / 10 ** DECIMALS.vstrata)).toFixed(4) : "—"} />
         </div>
       )}
 
@@ -199,11 +231,23 @@ export function VaultDashboard() {
   );
 }
 
-function Stat({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
+function Big({ label, value, unit, highlight }: { label: string; value: string; unit: string; highlight?: boolean }) {
   return (
-    <div className={`rounded-xl border p-3 ${highlight ? "border-sui/30 bg-sui/5" : "border-white/10 bg-white/[0.02]"}`}>
+    <div className={`rounded-2xl border p-4 ${highlight ? "border-sui/30 bg-sui/5" : "border-white/10 bg-white/[0.02]"}`}>
       <div className="text-xs text-white/40">{label}</div>
-      <div className="mt-1 font-mono text-sm">{value}</div>
+      <div className="mt-1 flex items-baseline gap-1">
+        <span className="font-mono text-2xl font-semibold">{value}</span>
+        <span className="text-xs text-white/40">{unit}</span>
+      </div>
+    </div>
+  );
+}
+
+function Detail({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-lg border border-white/10 bg-white/[0.02] p-3">
+      <div className="text-white/40">{label}</div>
+      <div className="mt-1 font-mono text-white/80">{value}</div>
     </div>
   );
 }
