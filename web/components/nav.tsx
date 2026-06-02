@@ -19,6 +19,7 @@ export function Nav() {
           <a href="#how" className="transition hover:text-white">How it works</a>
           <a href="#features" className="transition hover:text-white">Features</a>
           <a href="#vault" className="transition hover:text-white">Vault</a>
+          <a href="#sim" className="transition hover:text-white">Backtest</a>
           <a href="#proof" className="transition hover:text-white">Proof</a>
         </nav>
         <ConnectButton />

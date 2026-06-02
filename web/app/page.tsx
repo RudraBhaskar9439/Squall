@@ -5,6 +5,7 @@ import { HowItWorks } from "@/components/how-it-works";
 import { Features } from "@/components/features";
 import { VaultPreview } from "@/components/vault-preview";
 import { TrackRecord } from "@/components/track-record";
+import { Simulation } from "@/components/simulation";
 import { Footer } from "@/components/footer";
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
       <HowItWorks />
       <Features />
       <VaultPreview />
+      <Simulation />
       <TrackRecord />
       <Footer />
     </main>
