@@ -1,0 +1,21 @@
+# Move
+move/strata/build/
+
+# Node
+node_modules/
+dist/
+.next/
+out/
+*.tsbuildinfo
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+*.key
+keeper/state/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
