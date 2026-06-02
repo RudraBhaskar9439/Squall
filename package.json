@@ -1,0 +1,9 @@
+{
+  "name": "strata",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Strata — tokenized ERC-4626 structured-yield vaults on DeepBook Predict",
+  "scripts": {
+    "test": "pnpm -r test"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "@strata/sdk",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "node --experimental-strip-types --test test/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mysten/sui": "^1.30.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  }
+}
