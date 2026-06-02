@@ -21,7 +21,8 @@ Full cycle verified end-to-end against **real DeepBook Predict**
 
 Proven on-chain: `deposit 100 DUSDC → 100B vSTRATA` → `allocate 60 DUSDC into
 Predict PLP` → `divest → 60 DUSDC back + NAV report` → `redeem → DUSDC out`,
-plus a live `vol_index` update (65%).
+plus a live `vol_index` update (65%) and **3 verifiable NAV snapshots stored on
+Walrus** (the in-app Proof tab re-fetches and verifies them).
 
 ---
 
