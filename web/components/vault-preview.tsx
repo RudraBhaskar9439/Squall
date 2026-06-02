@@ -3,6 +3,7 @@
 import { useSuiClientQuery } from "@mysten/dapp-kit";
 import { motion } from "motion/react";
 import { Reveal } from "./reveal";
+import { VaultDashboard } from "./dashboard";
 import { STRATA, EXPLORER } from "@/lib/strata";
 
 type Fields = { value?: string; ema?: string; updates?: string };
@@ -67,31 +68,9 @@ export function VaultPreview() {
           </div>
         </Reveal>
 
-        {/* Vault card */}
+        {/* Interactive vault dashboard (live deposit/withdraw) */}
         <Reveal delay={0.1}>
-          <div className="flex h-full flex-col justify-between rounded-3xl border border-white/10 bg-white/[0.03] p-8">
-            <div>
-              <div className="text-sm text-white/50">DUSDC Premium-Harvest Vault</div>
-              <div className="mt-4 text-2xl font-semibold">vSTRATA</div>
-              <p className="mt-2 text-sm leading-relaxed text-white/55">
-                ERC-4626 vault supplying the DeepBook Predict PLP pool. Deposit dUSDC, earn the
-                option-seller premium, redeem anytime.
-              </p>
-            </div>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a
-                href={`${EXPLORER}/${STRATA.vault}`}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-full border border-white/15 px-4 py-2 text-sm text-white/80 transition hover:bg-white/5"
-              >
-                Vault object →
-              </a>
-              <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white/40">
-                Deposit UI — coming next
-              </span>
-            </div>
-          </div>
+          <VaultDashboard />
         </Reveal>
       </div>
     </section>

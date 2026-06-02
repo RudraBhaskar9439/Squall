@@ -6,4 +6,14 @@ export const STRATA = {
   volIndex: "0x7521737597f1697c18cd4382a5ff43d62b89cef3667d1d8d02e48cdda9d67f0c",
 } as const;
 
+export const TYPES = {
+  dusdc: "0xe95040085976bfd54a1a07225cd46c8a2b4e8e2b6732f140a0fc49850ba73e1a::dusdc::DUSDC",
+  vstrata: `${STRATA.package}::vstrata::VSTRATA`,
+} as const;
+
+export const DECIMALS = { dusdc: 6, vstrata: 9 } as const;
+
+// On-chain virtual-share offset (vault::VaultConfig.offset_pow).
+export const OFFSET_POW = 1000;
+
 export const EXPLORER = "https://suiscan.xyz/testnet/object";
