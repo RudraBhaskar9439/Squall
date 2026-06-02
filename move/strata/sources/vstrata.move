@@ -11,6 +11,7 @@ use sui::coin;
 /// One-time witness for the share currency.
 public struct VSTRATA has drop {}
 
+#[allow(deprecated_usage)]
 fun init(witness: VSTRATA, ctx: &mut TxContext) {
     let (treasury, metadata) = coin::create_currency(
         witness,

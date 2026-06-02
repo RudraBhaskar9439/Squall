@@ -1,6 +1,9 @@
 # Move
 move/strata/build/
 
+# Cloned DeepBook reference codebase (not ours; clone separately for builds)
+deepbook-ref/
+
 # Node
 node_modules/
 dist/

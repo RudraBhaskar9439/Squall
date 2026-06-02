@@ -19,8 +19,9 @@ strata/
 │   │   ├── access.move     # Admin / Keeper / Strategy capabilities
 │   │   ├── vstrata.move    # vSTRATA share token (one-time witness + treasury)
 │   │   ├── vault.move      # generic ERC-4626 vault core (strategy-agnostic)
-│   │   ├── fees.move       # management + performance fees (high-water mark)
-│   │   └── vol_index.move  # on-chain volatility index (EMA-smoothed)
+│   │   ├── fees.move           # management + performance fees (high-water mark)
+│   │   ├── vol_index.move      # on-chain volatility index (EMA-smoothed)
+│   │   └── predict_strategy.move # DeepBook Predict PLP premium-harvest strategy
 │   └── tests/              # Move unit tests (+ mock_strategy harness)
 ├── packages/sdk/         # shared @strata/sdk (typed on-chain client) — TODO
 ├── keeper/               # crash-safe off-chain automation (roll/index/walrus) — TODO
@@ -45,7 +46,7 @@ strategy module (next phase).
 | `vol_index` (on-chain vol index) | ✅ done | ✅ 2 tests |
 | `fees` (mgmt/perf fee, high-water mark) | ✅ done | ✅ 4 tests |
 | `mock_strategy` (test harness) + integration cycle | ✅ done | ✅ 1 test |
-| `predict_strategy` (DeepBook Predict integration) | ⏳ next | — |
+| `predict_strategy` (DeepBook Predict integration) | ✅ code done, typechecks vs real Predict API | deploy pending |
 | `@strata/sdk` | ⏳ todo | — |
 | keeper services | ⏳ todo | — |
 | web frontend | ⏳ todo | — |
@@ -67,7 +68,26 @@ sui move test
   (supply/redeem, read OracleSVI, read NAV mark, write Walrus). *Gate: NAV read.*
 - **Phase 1 — ERC-4626 vault core.** ✅ **Done** (math, access, vstrata, vault, vol_index, tests).
 - **Phase 2 — Fees + integration tests.** ✅ **Done** (fees with HWM, mock strategy, full deposit→harvest→fee cycle).
-- **Phase 3 — Keeper & auto-roll.** Event-driven roll loop, idempotent + resumable.
+- **Phase 3 — DeepBook Predict integration.** 🔨 In progress — `predict_strategy`
+  written and typechecking against the real Predict package (`supply`/`withdraw`
+  on testnet pkg `0xf5ea2b37…5138`). **Remaining to deploy:** (1) dUSDC from the
+  faucet, (2) the real testnet package IDs for `deepbook` + `token` (placeholders
+  in the cloned manifests for now — ask the DeepBook Telegram), (3) publish + run
+  one live deposit→supply→harvest→withdraw cycle.
+- **Phase 4 — Keeper & auto-roll.** Event-driven roll loop, idempotent + resumable.
+
+### Local build setup
+
+The Move package depends on the DeepBook Predict source. Clone it next to `move/`:
+
+```bash
+git clone --branch predict-testnet-4-16 --depth 1 \
+  https://github.com/MystenLabs/deepbookv3.git deepbook-ref
+# set distinct addresses in deepbook-ref/packages/{predict,deepbook,token}/Move.toml
+# (predict = 0xf5ea2b37…5138; deepbook/token = placeholders until real IDs known)
+```
+
+Requires **Sui CLI ≥ 1.73** (matches testnet; older versions lack `coin_registry`).
 - **Phase 3 — Vol index wiring.** Keeper derives ATM IV from OracleSVI → `vol_index::update`.
 - **Phase 4 — Frontend.** zkLogin onboarding, deposit/withdraw, NAV/APY, vol gauge.
 - **Phase 5 — Walrus track record.** Per-epoch snapshots (MemWal + raw-blob fallback).
