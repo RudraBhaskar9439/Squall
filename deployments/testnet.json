@@ -1,0 +1,30 @@
+{
+  "network": "testnet",
+  "deployedAt": "2026-06-02",
+  "strata": {
+    "package": "0x6db7afe5caa78f6c1caedf6546b44af1b1bdc35f6f4f8f3062e3b675f7396d3f",
+    "vault": "0xbc279cb0ce8622b5e27c787961b7b39a55ebea0cf6ad993bdea6a43bc55f3d9c",
+    "strategy": "0x32d8d720b6d2fc49b9c068151db0c84a9bdccc2e4856e8e476c95715213d9572",
+    "volIndex": "0x7521737597f1697c18cd4382a5ff43d62b89cef3667d1d8d02e48cdda9d67f0c",
+    "adminCap": "0x17652a0aa1e0b7aac15053eb8af4c878691be405f0769255a5176787781b0e9e",
+    "indexPublisherCap": "0x2b9523fefd8bfeeff0f94b87d31112faaad07c7764ec0bba2606b0f73e235876",
+    "upgradeCap": "0x54bf24012e554ea1eab8afd26b2f797c50c52f9c7467057141e495e88d5d83bf",
+    "vstrataType": "0x6db7afe5caa78f6c1caedf6546b44af1b1bdc35f6f4f8f3062e3b675f7396d3f::vstrata::VSTRATA",
+    "coinMetadata": "0x70477afc5794e05055dde1e27bd82a223e7be5f5943ddd46997b624b58681125"
+  },
+  "deepbookPredict": {
+    "predictPackage": "0xf5ea2b3749c65d6e56507cc35388719aadb28f9cab873696a2f8687f5c785138",
+    "predictObject": "0xc8736204d12f0a7277c86388a68bf8a194b0a14c5538ad13f22cbd8e2a38028a",
+    "predictRegistry": "0x43af14fed5480c20ff77e2263d5f794c35b9fab7e2212903127062f4fe2a6e64",
+    "deepbookPackage": "0xfb28c4cbc6865bd1c897d26aecbe1f8792d1509a20ffec692c800660cbec6982",
+    "tokenPackage": "0x36dbef866a1d62bf7328989a10fb2f07d769f4ee587c0de4a0a256e57e0a58a8",
+    "dusdcType": "0xe95040085976bfd54a1a07225cd46c8a2b4e8e2b6732f140a0fc49850ba73e1a::dusdc::DUSDC"
+  },
+  "verifiedCycle": {
+    "deposit": "100 DUSDC -> 100,000,000,000 vSTRATA",
+    "allocate": "60 DUSDC -> Predict PLP (59,920,294 PLP)",
+    "divest": "PLP -> 59,999,999 DUSDC returned, NAV reported",
+    "redeem": "100B vSTRATA -> 99,999,999 DUSDC",
+    "volIndexUpdate": "value=650000 (65%), ema seeded"
+  }
+}

@@ -7,6 +7,22 @@ verifiable performance track record on Walrus.
 - **Primary track:** DeepBook Predict (Sui Overflow 2026)
 - **Bounty hedge:** Walrus (verifiable data / agent memory)
 
+## 🟢 Live on Sui testnet
+
+Full cycle verified end-to-end against **real DeepBook Predict**
+(see [`deployments/testnet.json`](deployments/testnet.json)):
+
+| Object | ID |
+|---|---|
+| Package | `0x6db7afe5…6d3f` |
+| Vault (DUSDC/vSTRATA) | `0xbc279cb0…3d9c` |
+| PredictStrategy | `0x32d8d720…9572` |
+| VolIndex | `0x75217375…7f0c` |
+
+Proven on-chain: `deposit 100 DUSDC → 100B vSTRATA` → `allocate 60 DUSDC into
+Predict PLP` → `divest → 60 DUSDC back + NAV report` → `redeem → DUSDC out`,
+plus a live `vol_index` update (65%).
+
 ---
 
 ## Monorepo layout
@@ -46,7 +62,7 @@ strategy module (next phase).
 | `vol_index` (on-chain vol index) | ✅ done | ✅ 2 tests |
 | `fees` (mgmt/perf fee, high-water mark) | ✅ done | ✅ 4 tests |
 | `mock_strategy` (test harness) + integration cycle | ✅ done | ✅ 1 test |
-| `predict_strategy` (DeepBook Predict integration) | ✅ code done, typechecks vs real Predict API | deploy pending |
+| `predict_strategy` (DeepBook Predict integration) | ✅ **deployed to testnet, full cycle verified** | ✅ live |
 | `@strata/sdk` (SVI vol math + constants) | ✅ done | ✅ 8 tests |
 | `keeper` (vol-index updater + clients) | ✅ skeleton | ✅ 4 tests |
 

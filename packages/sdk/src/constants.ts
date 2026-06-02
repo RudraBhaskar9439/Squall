@@ -12,12 +12,12 @@ export const TESTNET = {
   sourceBranch: "predict-testnet-4-16",
 } as const;
 
-// Strata package + objects — filled in after `sui client publish` to testnet.
+// Strata testnet deployment (see deployments/testnet.json). Override via env.
 export const STRATA = {
-  package: process.env.STRATA_PACKAGE ?? "0x0",
-  vault: process.env.STRATA_VAULT ?? "0x0",
-  strategy: process.env.STRATA_STRATEGY ?? "0x0",
-  volIndex: process.env.STRATA_VOL_INDEX ?? "0x0",
-  adminCap: process.env.STRATA_ADMIN_CAP ?? "0x0",
-  indexPublisherCap: process.env.STRATA_INDEX_CAP ?? "0x0",
+  package: process.env.STRATA_PACKAGE ?? "0x6db7afe5caa78f6c1caedf6546b44af1b1bdc35f6f4f8f3062e3b675f7396d3f",
+  vault: process.env.STRATA_VAULT ?? "0xbc279cb0ce8622b5e27c787961b7b39a55ebea0cf6ad993bdea6a43bc55f3d9c",
+  strategy: process.env.STRATA_STRATEGY ?? "0x32d8d720b6d2fc49b9c068151db0c84a9bdccc2e4856e8e476c95715213d9572",
+  volIndex: process.env.STRATA_VOL_INDEX ?? "0x7521737597f1697c18cd4382a5ff43d62b89cef3667d1d8d02e48cdda9d67f0c",
+  adminCap: process.env.STRATA_ADMIN_CAP ?? "0x17652a0aa1e0b7aac15053eb8af4c878691be405f0769255a5176787781b0e9e",
+  indexPublisherCap: process.env.STRATA_INDEX_CAP ?? "0x2b9523fefd8bfeeff0f94b87d31112faaad07c7764ec0bba2606b0f73e235876",
 } as const;
