@@ -19,8 +19,9 @@ strata/
 │   │   ├── access.move     # Admin / Keeper / Strategy capabilities
 │   │   ├── vstrata.move    # vSTRATA share token (one-time witness + treasury)
 │   │   ├── vault.move      # generic ERC-4626 vault core (strategy-agnostic)
+│   │   ├── fees.move       # management + performance fees (high-water mark)
 │   │   └── vol_index.move  # on-chain volatility index (EMA-smoothed)
-│   └── tests/              # Move unit tests
+│   └── tests/              # Move unit tests (+ mock_strategy harness)
 ├── packages/sdk/         # shared @strata/sdk (typed on-chain client) — TODO
 ├── keeper/               # crash-safe off-chain automation (roll/index/walrus) — TODO
 ├── web/                  # Next.js frontend (zkLogin + dapp-kit) — TODO
@@ -40,10 +41,11 @@ strategy module (next phase).
 | `math` (ERC-4626 math + inflation guard) | ✅ done | covered via vault |
 | `access` (capabilities, vault-bound) | ✅ done | ✅ |
 | `vstrata` (share token) | ✅ done | — |
-| `vault` (ERC-4626 core + strategy hooks) | ✅ done | ✅ 4 tests |
+| `vault` (ERC-4626 core + strategy hooks + fee accrual) | ✅ done | ✅ |
 | `vol_index` (on-chain vol index) | ✅ done | ✅ 2 tests |
+| `fees` (mgmt/perf fee, high-water mark) | ✅ done | ✅ 4 tests |
+| `mock_strategy` (test harness) + integration cycle | ✅ done | ✅ 1 test |
 | `predict_strategy` (DeepBook Predict integration) | ⏳ next | — |
-| `fees` (mgmt/perf fee, high-water mark) | ⏳ todo | — |
 | `@strata/sdk` | ⏳ todo | — |
 | keeper services | ⏳ todo | — |
 | web frontend | ⏳ todo | — |
@@ -64,7 +66,8 @@ sui move test
   read Predict codebase (`predict-testnet-4-16`), prove the 4 load-bearing calls
   (supply/redeem, read OracleSVI, read NAV mark, write Walrus). *Gate: NAV read.*
 - **Phase 1 — ERC-4626 vault core.** ✅ **Done** (math, access, vstrata, vault, vol_index, tests).
-- **Phase 2 — Keeper & auto-roll.** Event-driven roll loop, idempotent + resumable.
+- **Phase 2 — Fees + integration tests.** ✅ **Done** (fees with HWM, mock strategy, full deposit→harvest→fee cycle).
+- **Phase 3 — Keeper & auto-roll.** Event-driven roll loop, idempotent + resumable.
 - **Phase 3 — Vol index wiring.** Keeper derives ATM IV from OracleSVI → `vol_index::update`.
 - **Phase 4 — Frontend.** zkLogin onboarding, deposit/withdraw, NAV/APY, vol gauge.
 - **Phase 5 — Walrus track record.** Per-epoch snapshots (MemWal + raw-blob fallback).

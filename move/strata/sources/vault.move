@@ -13,6 +13,7 @@ use sui::balance::{Self, Balance};
 use sui::coin::{Self, Coin, TreasuryCap};
 use sui::event;
 use strata::access::{Self, AdminCap, StrategyCap};
+use strata::fees;
 use strata::math;
 
 const EPaused: u64 = 0;
@@ -25,6 +26,9 @@ public struct VaultConfig has store {
     paused: bool,
     deposit_cap: u64, // 0 = unlimited
     offset_pow: u64, // virtual-share offset, e.g. 1000
+    mgmt_bps: u64, // annual management fee in bps
+    perf_bps: u64, // performance fee in bps (above HWM)
+    fee_recipient: address,
 }
 
 public struct Vault<phantom A, phantom S> has key {
@@ -33,6 +37,8 @@ public struct Vault<phantom A, phantom S> has key {
     deployed_value: u64, // cached mark of funds held by the strategy
     treasury: TreasuryCap<S>, // mints/burns share token
     config: VaultConfig,
+    hwm_pps: u128, // high-water mark price-per-share for perf fees
+    last_accrual_ms: u64, // timestamp of last fee accrual
 }
 
 public struct Deposited has copy, drop { vault: ID, assets: u64, shares: u64 }
@@ -55,7 +61,16 @@ public fun new<A, S>(
         idle: balance::zero<A>(),
         deployed_value: 0,
         treasury,
-        config: VaultConfig { paused: false, deposit_cap, offset_pow },
+        config: VaultConfig {
+            paused: false,
+            deposit_cap,
+            offset_pow,
+            mgmt_bps: 0,
+            perf_bps: 0,
+            fee_recipient: ctx.sender(),
+        },
+        hwm_pps: 0,
+        last_accrual_ms: 0,
     };
     (vault, access::new_admin(vault_id, ctx), access::new_strategy(vault_id, ctx))
 }
@@ -177,16 +192,20 @@ public fun take_for_strategy<A, S>(
 }
 
 /// Strategy returns realized cash to idle and reports the current mark of
-/// whatever remains deployed. This is the vault's NAV refresh point.
+/// whatever remains deployed. This is the vault's NAV refresh point, and also
+/// where management + performance fees accrue. `now_ms` is the clock time.
 public fun report<A, S>(
     v: &mut Vault<A, S>,
     cap: &StrategyCap,
     returned: Balance<A>,
     new_deployed_value: u64,
+    now_ms: u64,
+    ctx: &mut TxContext,
 ) {
     assert!(access::strategy_vault_id(cap) == object::id(v), EWrongVault);
     balance::join(&mut v.idle, returned);
     v.deployed_value = new_deployed_value;
+    accrue_fees(v, now_ms, ctx);
     event::emit(Reported {
         vault: object::id(v),
         idle: balance::value(&v.idle),
@@ -194,9 +213,49 @@ public fun report<A, S>(
     });
 }
 
+/// Mint fee shares (dilution) for elapsed management fees and any performance
+/// above the high-water mark. Called on every `report`.
+fun accrue_fees<A, S>(v: &mut Vault<A, S>, now_ms: u64, ctx: &mut TxContext) {
+    let ta = total_assets(v);
+    if (total_shares(v) == 0) {
+        v.last_accrual_ms = now_ms;
+        return
+    };
+
+    let elapsed = if (now_ms > v.last_accrual_ms) { now_ms - v.last_accrual_ms } else { 0 };
+    let mgmt_shares = fees::management_fee_shares(ta, total_shares(v), v.config.mgmt_bps, elapsed);
+    if (mgmt_shares > 0) {
+        let c = coin::mint(&mut v.treasury, mgmt_shares, ctx);
+        transfer::public_transfer(c, v.config.fee_recipient);
+    };
+
+    let (perf_shares, new_hwm) =
+        fees::performance_fee_shares(ta, total_shares(v), v.hwm_pps, v.config.perf_bps);
+    if (perf_shares > 0) {
+        let c = coin::mint(&mut v.treasury, perf_shares, ctx);
+        transfer::public_transfer(c, v.config.fee_recipient);
+    };
+
+    v.hwm_pps = new_hwm;
+    v.last_accrual_ms = now_ms;
+}
+
 // =========================== admin ===========================
 
 public fun set_paused<A, S>(v: &mut Vault<A, S>, cap: &AdminCap, paused: bool) {
     assert!(access::admin_vault_id(cap) == object::id(v), EWrongVault);
     v.config.paused = paused;
+}
+
+public fun set_fees<A, S>(
+    v: &mut Vault<A, S>,
+    cap: &AdminCap,
+    mgmt_bps: u64,
+    perf_bps: u64,
+    fee_recipient: address,
+) {
+    assert!(access::admin_vault_id(cap) == object::id(v), EWrongVault);
+    v.config.mgmt_bps = mgmt_bps;
+    v.config.perf_bps = perf_bps;
+    v.config.fee_recipient = fee_recipient;
 }

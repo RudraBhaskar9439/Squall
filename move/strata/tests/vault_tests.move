@@ -52,7 +52,7 @@ fun profit_raises_share_price() {
     // Deploy 500k to the strategy, then report it came back as 600k (100k profit).
     let deployed = vault::take_for_strategy(&mut v, &strat, 500_000);
     balance::destroy_for_testing(deployed); // simulate the strategy consuming it
-    vault::report(&mut v, &strat, balance::create_for_testing<ASSET>(600_000), 0);
+    vault::report(&mut v, &strat, balance::create_for_testing<ASSET>(600_000), 0, 1000, ctx);
 
     assert!(vault::total_assets(&v) == 1_100_000, 0); // 500k idle left + 600k returned
     // The same shares now redeem for more than the original deposit.
