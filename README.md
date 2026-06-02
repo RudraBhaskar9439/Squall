@@ -23,8 +23,8 @@ strata/
 │   │   ├── vol_index.move      # on-chain volatility index (EMA-smoothed)
 │   │   └── predict_strategy.move # DeepBook Predict PLP premium-harvest strategy
 │   └── tests/              # Move unit tests (+ mock_strategy harness)
-├── packages/sdk/         # shared @strata/sdk (typed on-chain client) — TODO
-├── keeper/               # crash-safe off-chain automation (roll/index/walrus) — TODO
+├── packages/sdk/         # @strata/sdk: SVI vol math + testnet constants ✅
+├── keeper/               # off-chain automation (vol-index updater, mock+sui clients) ✅ skeleton
 ├── web/                  # Next.js frontend (zkLogin + dapp-kit) — TODO
 └── sim/                  # strategy backtest / simulation — TODO
 ```
@@ -47,6 +47,15 @@ strategy module (next phase).
 | `fees` (mgmt/perf fee, high-water mark) | ✅ done | ✅ 4 tests |
 | `mock_strategy` (test harness) + integration cycle | ✅ done | ✅ 1 test |
 | `predict_strategy` (DeepBook Predict integration) | ✅ code done, typechecks vs real Predict API | deploy pending |
+| `@strata/sdk` (SVI vol math + constants) | ✅ done | ✅ 8 tests |
+| `keeper` (vol-index updater + clients) | ✅ skeleton | ✅ 4 tests |
+
+Run the off-chain tests:
+
+```bash
+pnpm install
+pnpm -r test   # 8 SDK + 4 keeper
+```
 | `@strata/sdk` | ⏳ todo | — |
 | keeper services | ⏳ todo | — |
 | web frontend | ⏳ todo | — |
