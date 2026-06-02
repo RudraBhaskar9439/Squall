@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { ConnectButton } from "@mysten/dapp-kit";
 import { motion } from "motion/react";
 
@@ -12,15 +13,15 @@ export function Nav() {
       className="fixed inset-x-0 top-0 z-50 border-b border-white/5 bg-black/30 backdrop-blur-md"
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-        <a href="#top" className="text-lg font-semibold tracking-tight">
+        <Link href="/" className="text-lg font-semibold tracking-tight">
           <span className="text-aqua">◆</span> Strata
-        </a>
+        </Link>
         <nav className="hidden gap-8 text-sm text-white/60 md:flex">
-          <a href="#how" className="transition hover:text-white">How it works</a>
-          <a href="#features" className="transition hover:text-white">Features</a>
-          <a href="#vault" className="transition hover:text-white">Vault</a>
-          <a href="#sim" className="transition hover:text-white">Backtest</a>
-          <a href="#proof" className="transition hover:text-white">Proof</a>
+          <Link href="/#how" className="transition hover:text-white">How it works</Link>
+          <Link href="/#features" className="transition hover:text-white">Features</Link>
+          <Link href="/#sim" className="transition hover:text-white">Backtest</Link>
+          <Link href="/vault" className="transition hover:text-white">Vault</Link>
+          <Link href="/vault#proof" className="transition hover:text-white">Proof</Link>
         </nav>
         <ConnectButton />
       </div>

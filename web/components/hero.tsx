@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 import { EASE } from "@/lib/anim";
@@ -40,9 +41,9 @@ export function Hero() {
           powered by the first on-chain volatility index on Sui, with a verifiable track record on Walrus.
         </motion.p>
         <motion.div variants={item} className="mt-10 flex flex-wrap items-center justify-center gap-4">
-          <a href="#vault" className="rounded-full bg-sui px-6 py-3 font-medium text-ink transition hover:bg-aqua">
+          <Link href="/vault" className="rounded-full bg-sui px-6 py-3 font-medium text-ink transition hover:bg-aqua">
             Open the vault
-          </a>
+          </Link>
           <a href="#how" className="rounded-full border border-white/15 px-6 py-3 font-medium text-white/80 transition hover:bg-white/5">
             How it works
           </a>
