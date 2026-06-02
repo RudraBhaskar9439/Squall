@@ -2,7 +2,16 @@ import type { SuiClient } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import type { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import { STRATA } from "@strata/sdk";
-import type { ChainClient, OracleSnapshot } from "../domain/types.ts";
+import type { ChainClient, OracleSnapshot, VaultState } from "../domain/types.ts";
+
+function pu64(f: unknown): number {
+  if (f == null) return 0;
+  if (typeof f === "string" || typeof f === "number") return Number(f);
+  const o = f as { value?: unknown; fields?: { value?: unknown } };
+  if (o.fields?.value != null) return Number(o.fields.value);
+  if (o.value != null) return Number(o.value);
+  return 0;
+}
 
 /** Real Sui testnet ChainClient. Reads OracleSVI state and submits vol-index
  *  updates. Oracle querying is stubbed until wired to live testnet data
@@ -40,5 +49,25 @@ export class SuiChainClient implements ChainClient {
       transaction: tx,
     });
     return res.digest;
+  }
+
+  async readVaultState(): Promise<VaultState> {
+    const obj = await this.client.getObject({ id: STRATA.vault, options: { showContent: true } });
+    const content = obj.data?.content;
+    const fields = (content && "fields" in content ? content.fields : {}) as Record<string, unknown>;
+    const idle = pu64(fields.idle);
+    const deployed = pu64(fields.deployed_value);
+    const supply = await this.client.getTotalSupply({
+      coinType: `${STRATA.package}::vstrata::VSTRATA`,
+    });
+    const totalShares = Number(supply.value);
+    return { idle, deployed, totalAssets: idle + deployed, totalShares };
+  }
+
+  async readVolIndex(): Promise<number> {
+    const obj = await this.client.getObject({ id: STRATA.volIndex, options: { showContent: true } });
+    const content = obj.data?.content;
+    const fields = (content && "fields" in content ? content.fields : {}) as Record<string, unknown>;
+    return pu64(fields.value);
   }
 }
