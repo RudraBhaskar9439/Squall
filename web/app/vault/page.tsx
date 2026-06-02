@@ -6,8 +6,8 @@ import { TrackRecord } from "@/components/track-record";
 import { Footer } from "@/components/footer";
 
 export const metadata = {
-  title: "Strata — Vault",
-  description: "Deposit, withdraw, and track your Strata vault position on Sui testnet.",
+  title: "Squall — Vault",
+  description: "Deposit, withdraw, and track your Squall vault position on Sui testnet.",
 };
 
 export default function VaultPage() {

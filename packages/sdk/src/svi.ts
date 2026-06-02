@@ -1,4 +1,4 @@
-// SVI volatility math — the brain of Strata's on-chain volatility index.
+// SVI volatility math — the brain of Squall's on-chain volatility index.
 //
 // The Predict OracleSVI publishes raw SVI parameters (a, b, rho, m, sigma) in
 // 1e9 fixed-point. This module reconstructs the implied-volatility surface from

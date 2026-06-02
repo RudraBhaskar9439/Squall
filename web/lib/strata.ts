@@ -1,4 +1,4 @@
-// Strata testnet deployment (mirror of /deployments/testnet.json).
+// Squall testnet deployment (mirror of /deployments/testnet.json).
 export const STRATA = {
   package: "0x6db7afe5caa78f6c1caedf6546b44af1b1bdc35f6f4f8f3062e3b675f7396d3f",
   vault: "0xbc279cb0ce8622b5e27c787961b7b39a55ebea0cf6ad993bdea6a43bc55f3d9c",

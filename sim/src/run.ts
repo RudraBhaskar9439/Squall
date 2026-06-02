@@ -14,15 +14,15 @@ const pct = (x: number) => `${(x * 100).toFixed(2)}%`;
 const row = (label: string, s: { apy: number; maxDrawdown: number; sharpe: number; finalNav: number }) =>
   `${label.padEnd(14)}${pct(s.apy).padEnd(11)}${pct(s.maxDrawdown).padEnd(11)}${s.sharpe.toFixed(2).padEnd(9)}${s.finalNav.toFixed(3)}`;
 
-console.log("\nStrata premium-harvest backtest (1y, weekly rolls)\n");
+console.log("\nSquall premium-harvest backtest (1y, weekly rolls)\n");
 console.log(`Illustrative path (seed ${PATH_SEED}, crash @ epoch ${DEFAULTS.crashEpoch})`);
 console.log("              APY        maxDD      Sharpe   finalNAV");
 console.log(row("naive PLP", r.naive));
-console.log(row("Strata hedged", r.hedged));
+console.log(row("Squall hedged", r.hedged));
 console.log(`\nMonte Carlo (${mc.runs} random crash scenarios) — averages`);
 console.log("              APY        maxDD      Sharpe   finalNAV");
 console.log(row("naive PLP", mc.naive));
-console.log(row("Strata hedged", mc.hedged));
+console.log(row("Squall hedged", mc.hedged));
 
 // Downsample paths for a lightweight chart payload.
 const step = Math.max(1, Math.floor(r.navNaive.length / 180));

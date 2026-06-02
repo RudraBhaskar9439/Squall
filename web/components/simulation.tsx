@@ -39,7 +39,7 @@ export function Simulation() {
             {sim ? <Chart sim={sim} /> : <div className="h-[260px] animate-pulse rounded-xl bg-white/5" />}
             <div className="mt-4 flex gap-6 text-xs text-white/60">
               <span><span className="mr-1.5 inline-block h-2 w-2 rounded-full bg-grape align-middle" />Naive PLP (unhedged)</span>
-              <span><span className="mr-1.5 inline-block h-2 w-2 rounded-full bg-aqua align-middle" />Strata (hedged)</span>
+              <span><span className="mr-1.5 inline-block h-2 w-2 rounded-full bg-aqua align-middle" />Squall (hedged)</span>
               <span className="text-white/30">▏ crash</span>
             </div>
           </div>

@@ -17,8 +17,8 @@ fun init(witness: VSTRATA, ctx: &mut TxContext) {
         witness,
         9,
         b"vSTRATA",
-        b"Strata Vault Share",
-        b"Tokenized ERC-4626 vault share token for the Strata protocol",
+        b"Squall Vault Share",
+        b"Tokenized ERC-4626 vault share token for the Squall protocol",
         option::none(),
         ctx,
     );

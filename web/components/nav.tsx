@@ -14,7 +14,7 @@ export function Nav() {
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         <Link href="/" className="text-lg font-semibold tracking-tight">
-          <span className="text-aqua">◆</span> Strata
+          <span className="text-aqua">◆</span> Squall
         </Link>
         <nav className="hidden gap-8 text-sm text-white/60 md:flex">
           <Link href="/#how" className="transition hover:text-white">How it works</Link>

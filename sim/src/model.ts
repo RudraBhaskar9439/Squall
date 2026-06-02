@@ -1,4 +1,4 @@
-// Backtest of the Strata premium-harvest strategy.
+// Backtest of the Squall premium-harvest strategy.
 //
 // The PLP vault is the option-seller: each epoch it collects a straddle-like
 // premium priced off implied vol, and pays the realized move. When implied vol
@@ -6,7 +6,7 @@
 // (tail) causes a big loss. The "hedged" variant spends part of the premium on
 // out-of-the-money protection that pays off on big moves, capping the tail.
 //
-// We compare the naive PLP seller vs. the Strata hedged vault on the same
+// We compare the naive PLP seller vs. the Squall hedged vault on the same
 // price path, including an injected crash, and report APY / max drawdown /
 // Sharpe.
 import { gaussian, mulberry32 } from "./rng.ts";

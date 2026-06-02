@@ -1,4 +1,4 @@
-/// DeepBook Predict strategy: the premium-harvest leg of Strata.
+/// DeepBook Predict strategy: the premium-harvest leg of Squall.
 ///
 /// Holds the vault's `StrategyCap` and its PLP position. Capital pulled from the
 /// vault is supplied into Predict's PLP vault (`predict::supply`) to earn the

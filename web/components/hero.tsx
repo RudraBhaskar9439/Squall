@@ -37,7 +37,7 @@ export function Hero() {
           <span className="text-gradient">built on volatility.</span>
         </motion.h1>
         <motion.p variants={item} className="mx-auto mt-6 max-w-2xl text-pretty text-lg text-white/60">
-          Strata is the Ribbon Finance of Sui — tokenized ERC-4626 vaults on DeepBook Predict,
+          Squall is the Ribbon Finance of Sui — tokenized ERC-4626 vaults on DeepBook Predict,
           powered by the first on-chain volatility index on Sui, with a verifiable track record on Walrus.
         </motion.p>
         <motion.div variants={item} className="mt-10 flex flex-wrap items-center justify-center gap-4">

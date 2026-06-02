@@ -1,4 +1,4 @@
-# Strata
+# Squall
 
 **The Ribbon Finance of Sui** — tokenized ERC-4626 structured-yield vaults on
 DeepBook Predict, powered by the first on-chain volatility index on Sui, with a
