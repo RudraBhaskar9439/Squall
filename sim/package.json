@@ -1,0 +1,10 @@
+{
+  "name": "@strata/sim",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-transform-types --test test/*.test.ts",
+    "run": "node --experimental-transform-types src/run.ts"
+  }
+}
