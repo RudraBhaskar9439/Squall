@@ -4,6 +4,8 @@
   "private": true,
   "description": "Squall — tokenized ERC-4626 structured-yield vaults on DeepBook Predict",
   "scripts": {
-    "test": "pnpm -r test"
+    "test": "pnpm -r test",
+    "healthcheck": "bash scripts/healthcheck.sh",
+    "healthcheck:live": "bash scripts/healthcheck.sh live"
   }
 }
