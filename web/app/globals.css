@@ -16,7 +16,7 @@
 }
 
 body {
-  background: var(--color-ink);
+  background: #04111f;
   color: #e7ecf3;
   font-family: var(--font-sans), system-ui, sans-serif;
   overflow-x: hidden;
