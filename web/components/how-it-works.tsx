@@ -1,31 +1,52 @@
 import { Reveal } from "./reveal";
 
 const steps = [
-  { n: "01", title: "Deposit", body: "Deposit dUSDC and receive vSTRATA — a composable ERC-4626 share of the vault." },
-  { n: "02", title: "Auto-supply", body: "The vault supplies the DeepBook Predict PLP pool, earning the option-seller premium." },
-  { n: "03", title: "Harvest & roll", body: "A keeper marks NAV from the live SVI vol surface and rolls into each new expiry." },
-  { n: "04", title: "Redeem", body: "Burn vSTRATA anytime to withdraw your share of the vault's assets." },
+  {
+    t: "Deposit",
+    d: "Deposit USDC and receive vSTRATA — a composable share of the vault.",
+    icon: "M12 3v10m0 0l-4-4m4 4l4-4M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3",
+  },
+  {
+    t: "Be the house",
+    d: "The vault supplies DeepBook Predict's PLP — earning a share of every trade.",
+    icon: "M12 3l9 5-9 5-9-5 9-5zM3 13l9 5 9-5",
+  },
+  {
+    t: "Hedge & roll",
+    d: "A keeper marks NAV from the live vol surface and auto-rolls each expiry, hedging the tail.",
+    icon: "M4 12a8 8 0 0114-5.3M20 12a8 8 0 01-14 5.3M18 4v3h-3M6 20v-3h3",
+  },
+  {
+    t: "Withdraw",
+    d: "Burn vSTRATA anytime to cash out your share of the vault.",
+    icon: "M12 14V4m0 0L8 8m4-4l4 4M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3",
+  },
 ];
 
 export function HowItWorks() {
   return (
     <section id="how" className="relative mx-auto max-w-6xl px-6 py-28">
       <Reveal>
-        <h2 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
+        <h2 className="text-balance text-center text-4xl font-semibold tracking-tight sm:text-5xl">
           How it <span className="text-gradient">works</span>
         </h2>
-        <p className="mt-4 max-w-xl text-white/55">
-          One deposit becomes a self-rolling, capital-efficient options-premium strategy.
+        <p className="mx-auto mt-4 max-w-xl text-center text-white/55">
+          One deposit becomes a self-rolling, hedged, capital-efficient strategy.
         </p>
       </Reveal>
 
-      <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {steps.map((s, i) => (
-          <Reveal key={s.n} delay={i * 0.1}>
-            <div className="h-full rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-sui/40 hover:bg-white/[0.05]">
-              <div className="font-mono text-sm text-sui">{s.n}</div>
-              <h3 className="mt-3 text-xl font-semibold">{s.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-white/55">{s.body}</p>
+          <Reveal key={s.t} delay={i * 0.1}>
+            <div className="group h-full rounded-3xl border border-white/10 bg-white/[0.03] p-8 text-center transition hover:border-sui/40 hover:bg-white/[0.05]">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-aqua transition group-hover:border-sui/40">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  <path d={s.icon} />
+                </svg>
+              </div>
+              <div className="mt-5 font-mono text-xs text-white/30">0{i + 1}</div>
+              <h3 className="mt-1 text-xl font-semibold">{s.t}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-white/55">{s.d}</p>
             </div>
           </Reveal>
         ))}
