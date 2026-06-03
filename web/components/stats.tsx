@@ -9,7 +9,7 @@ const stats = [
 
 export function Stats() {
   return (
-    <section className="relative mx-auto max-w-6xl px-6 py-20">
+    <section className="relative mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-16 py-20">
       <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/5 md:grid-cols-4">
         {stats.map((s, i) => (
           <Reveal key={s.label} delay={i * 0.08} className="bg-ink-2/60 p-8 text-center">

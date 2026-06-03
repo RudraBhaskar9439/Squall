@@ -15,9 +15,9 @@ export default function VaultPage() {
     <main className="relative">
       <Nav />
 
-      <section className="mx-auto max-w-6xl px-6 pb-8 pt-32">
+      <section className="mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-16 pb-8 pt-32">
         <Reveal>
-          <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
+          <h1 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
             Be the <span className="text-gradient">house</span>
           </h1>
           <p className="mt-3 max-w-2xl text-white/55">
@@ -44,7 +44,7 @@ export default function VaultPage() {
         </Reveal>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 pb-6">
+      <section className="mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-16 pb-6">
         <div className="grid items-stretch gap-6 lg:grid-cols-2">
           <Reveal>
             <VolGauge />

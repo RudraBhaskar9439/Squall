@@ -25,9 +25,9 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section id="how" className="relative mx-auto max-w-6xl px-6 py-28">
+    <section id="how" className="relative mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-16 py-20 sm:py-28 lg:py-32">
       <Reveal>
-        <h2 className="text-balance text-center text-4xl font-semibold tracking-tight sm:text-5xl">
+        <h2 className="text-balance text-center text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
           How it <span className="text-gradient">works</span>
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-center text-white/55">

@@ -31,7 +31,7 @@ export function Hero() {
     <section
       ref={ref}
       id="top"
-      className="relative flex min-h-[100svh] items-center justify-center overflow-hidden px-6"
+      className="relative flex min-h-[100svh] items-center justify-center overflow-hidden px-6 sm:px-8"
     >
       <div className="glow left-1/4 top-1/4 h-[460px] w-[460px] bg-sui/30" />
       <div className="glow right-1/4 top-1/3 h-[420px] w-[420px] bg-grape/25" />
@@ -50,7 +50,7 @@ export function Hero() {
         variants={container}
         initial="hidden"
         animate="show"
-        className="relative z-10 mx-auto max-w-4xl text-center"
+        className="relative z-10 mx-auto max-w-5xl text-center"
       >
         <motion.div
           variants={item}
@@ -60,13 +60,13 @@ export function Hero() {
         </motion.div>
         <motion.h1
           variants={item}
-          className="text-balance text-5xl font-semibold leading-[1.04] tracking-tight sm:text-7xl"
+          className="text-balance text-4xl font-semibold leading-[1.04] tracking-tight sm:text-6xl lg:text-7xl xl:text-8xl"
         >
           Structured yield,
           <br />
           <span className="text-gradient">built on volatility.</span>
         </motion.h1>
-        <motion.p variants={item} className="mx-auto mt-6 max-w-2xl text-pretty text-lg text-white/60">
+        <motion.p variants={item} className="mx-auto mt-6 max-w-2xl text-pretty text-base text-white/60 sm:text-lg lg:text-xl">
           Squall is the Ribbon Finance of Sui — tokenized vaults on DeepBook Predict, powered by the
           first on-chain volatility index on Sui, with a verifiable track record on Walrus.
         </motion.p>

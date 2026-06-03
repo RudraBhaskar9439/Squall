@@ -25,10 +25,10 @@ const features = [
 
 export function Features() {
   return (
-    <section id="features" className="relative mx-auto max-w-6xl px-6 py-28">
+    <section id="features" className="relative mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-16 py-20 sm:py-28 lg:py-32">
       <div className="glow right-0 top-1/4 h-[360px] w-[360px] bg-grape/20" />
       <Reveal>
-        <h2 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
+        <h2 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
           Built like <span className="text-gradient">real infrastructure</span>
         </h2>
       </Reveal>

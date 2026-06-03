@@ -21,10 +21,10 @@ export function Simulation() {
   }, []);
 
   return (
-    <section id="sim" className="relative mx-auto max-w-6xl px-6 py-28">
+    <section id="sim" className="relative mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-16 py-20 sm:py-28 lg:py-32">
       <div className="glow left-1/4 top-10 h-[340px] w-[340px] bg-teal/20" />
       <Reveal>
-        <h2 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
+        <h2 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">
           Backtested <span className="text-gradient">risk transfer</span>
         </h2>
         <p className="mt-4 max-w-2xl text-white/55">
