@@ -35,7 +35,7 @@ export function Hero() {
       <div className="glow left-[15%] top-[20%] h-[460px] w-[460px] bg-sui/30" />
       <div className="glow right-[15%] top-[30%] h-[420px] w-[420px] bg-grape/25" />
 
-      {/* animated wave — full-bleed, BEHIND the glass */}
+      {/* animated wave — full-bleed, behind everything */}
       <motion.div
         style={{ scale: waveScale, y: waveY, opacity: waveOpacity }}
         className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
@@ -43,58 +43,57 @@ export function Hero() {
         <BigWave />
       </motion.div>
 
-      {/* frosted glass panel — wave shows through it blurred, sharp around the edges */}
+      {/* soft, edgeless scrim so the text stays legible over the wave (no box) */}
+      <div
+        className="pointer-events-none absolute inset-0 z-[5]"
+        style={{
+          background:
+            "radial-gradient(ellipse 55% 45% at 50% 50%, rgba(5,6,10,0.78) 0%, rgba(5,6,10,0.35) 45%, transparent 72%)",
+        }}
+      />
+
+      {/* hero copy — floats over the wave */}
       <motion.div
         style={{ y: panelY, opacity: panelOpacity }}
-        className="relative z-10 w-full max-w-3xl"
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className="relative z-10 mx-auto max-w-3xl text-center"
       >
         <motion.div
-          variants={container}
-          initial="hidden"
-          animate="show"
-          className="relative overflow-hidden rounded-[2rem] border border-white/12 bg-white/[0.04] px-6 py-12 text-center shadow-[0_30px_120px_-30px_rgba(77,162,255,0.35)] backdrop-blur-2xl sm:px-14 sm:py-16"
+          variants={item}
+          className="mx-auto mb-6 w-fit rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs text-white/75 backdrop-blur-sm"
         >
-          {/* glass sheen */}
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/[0.08] via-transparent to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/20" />
-
-          <div className="relative">
-            <motion.div
-              variants={item}
-              className="mx-auto mb-6 w-fit rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs text-white/75"
-            >
-              🌀 Live on Sui testnet · Built on DeepBook Predict
-            </motion.div>
-            <motion.h1
-              variants={item}
-              className="text-balance text-4xl font-semibold leading-[1.04] tracking-tight sm:text-6xl lg:text-7xl"
-            >
-              Structured yield,
-              <br />
-              <span className="text-gradient">built on volatility.</span>
-            </motion.h1>
-            <motion.p
-              variants={item}
-              className="mx-auto mt-6 max-w-xl text-pretty text-base text-white/65 sm:text-lg"
-            >
-              The Ribbon Finance of Sui — tokenized vaults on DeepBook Predict, powered by the first
-              on-chain volatility index on Sui, with a verifiable track record on Walrus.
-            </motion.p>
-            <motion.div variants={item} className="mt-9 flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href="/vault"
-                className="rounded-full bg-sui px-6 py-3 font-medium text-ink transition hover:bg-aqua"
-              >
-                Open the vault →
-              </Link>
-              <a
-                href="#how"
-                className="rounded-full border border-white/15 px-6 py-3 font-medium text-white/80 transition hover:bg-white/5"
-              >
-                How it works
-              </a>
-            </motion.div>
-          </div>
+          🌀 Live on Sui testnet · Built on DeepBook Predict
+        </motion.div>
+        <motion.h1
+          variants={item}
+          className="text-balance text-4xl font-semibold leading-[1.04] tracking-tight drop-shadow-[0_2px_30px_rgba(0,0,0,0.6)] sm:text-6xl lg:text-7xl"
+        >
+          Structured yield,
+          <br />
+          <span className="text-gradient">built on volatility.</span>
+        </motion.h1>
+        <motion.p
+          variants={item}
+          className="mx-auto mt-6 max-w-xl text-pretty text-base text-white/70 drop-shadow-[0_2px_16px_rgba(0,0,0,0.7)] sm:text-lg"
+        >
+          The Ribbon Finance of Sui — tokenized vaults on DeepBook Predict, powered by the first
+          on-chain volatility index on Sui, with a verifiable track record on Walrus.
+        </motion.p>
+        <motion.div variants={item} className="mt-9 flex flex-wrap items-center justify-center gap-3">
+          <Link
+            href="/vault"
+            className="rounded-full bg-sui px-6 py-3 font-medium text-ink shadow-lg shadow-sui/20 transition hover:bg-aqua"
+          >
+            Open the vault →
+          </Link>
+          <a
+            href="#how"
+            className="rounded-full border border-white/15 bg-black/20 px-6 py-3 font-medium text-white/80 backdrop-blur-sm transition hover:bg-white/5"
+          >
+            How it works
+          </a>
         </motion.div>
       </motion.div>
 
