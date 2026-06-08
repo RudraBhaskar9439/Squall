@@ -45,13 +45,13 @@ export function TrackRecord() {
 
       <div className="relative mt-14 space-y-4">
         {entries.length === 0 && (
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-sm text-white/40">
+          <div className="rounded-2xl border border-white/10 bg-[#0b2a40]/35 backdrop-blur-md p-6 text-sm text-white/40">
             No snapshots yet.
           </div>
         )}
         {entries.map((e, i) => (
           <Reveal key={e.epoch} delay={i * 0.06}>
-            <div className="grid items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:grid-cols-[auto_1fr_auto]">
+            <div className="grid items-center gap-4 rounded-2xl border border-white/10 bg-[#0b2a40]/35 backdrop-blur-md p-6 md:grid-cols-[auto_1fr_auto]">
               <div className="font-mono text-sm text-sui">EPOCH {e.epoch}</div>
               <div>
                 <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm">

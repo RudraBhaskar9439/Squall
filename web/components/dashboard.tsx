@@ -129,7 +129,7 @@ export function VaultDashboard() {
   }
 
   return (
-    <div className="flex h-full flex-col rounded-3xl border border-white/10 bg-white/[0.03] p-8">
+    <div className="flex h-full flex-col rounded-3xl border border-white/10 bg-[#0b2a40]/35 backdrop-blur-md p-8">
       {/* header */}
       <div className="flex items-start justify-between gap-3">
         <div>

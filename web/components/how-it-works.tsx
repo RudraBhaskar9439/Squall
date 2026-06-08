@@ -38,8 +38,8 @@ export function HowItWorks() {
       <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {steps.map((s, i) => (
           <Reveal key={s.t} delay={i * 0.1}>
-            <div className="group h-full rounded-3xl border border-white/10 bg-white/[0.03] p-8 text-center transition hover:border-sui/40 hover:bg-white/[0.05]">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] text-aqua transition group-hover:border-sui/40">
+            <div className="group h-full rounded-3xl border border-white/10 bg-[#0b2a40]/35 backdrop-blur-md p-8 text-center transition hover:border-sui/40 hover:bg-white/[0.05]">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-[#0b2a40]/35 backdrop-blur-md text-aqua transition group-hover:border-sui/40">
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                   <path d={s.icon} />
                 </svg>

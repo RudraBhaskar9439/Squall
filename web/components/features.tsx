@@ -35,7 +35,7 @@ export function Features() {
       <div className="relative mt-14 grid gap-6 md:grid-cols-2">
         {features.map((f, i) => (
           <Reveal key={f.title} delay={i * 0.08}>
-            <div className="flex h-full gap-5 rounded-2xl border border-white/10 bg-white/[0.03] p-7">
+            <div className="flex h-full gap-5 rounded-2xl border border-white/10 bg-[#0b2a40]/35 backdrop-blur-md p-7">
               <div className="text-2xl text-aqua">{f.icon}</div>
               <div>
                 <h3 className="text-xl font-semibold">{f.title}</h3>

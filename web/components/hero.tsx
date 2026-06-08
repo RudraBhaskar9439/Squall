@@ -117,7 +117,7 @@ function BigWave() {
   return (
     <motion.svg
       viewBox="0 0 1200 520"
-      className="w-[160vw] max-w-[1900px]"
+      className="w-[160vw] min-w-[1100px]"
       initial={{ opacity: 0, scale: 0.92 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1.3, ease: EASE }}

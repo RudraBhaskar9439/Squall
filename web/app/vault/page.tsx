@@ -34,7 +34,7 @@ export default function VaultPage() {
               { n: "2", t: "The vault earns", d: "It’s the house on Predict — earning fees from traders, with a hedge capping bad days." },
               { n: "3", t: "Withdraw anytime", d: "Burn your shares to cash out your balance." },
             ].map((s) => (
-              <div key={s.n} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+              <div key={s.n} className="rounded-2xl border border-white/10 bg-[#0b2a40]/35 backdrop-blur-md p-5">
                 <div className="font-mono text-sm text-sui">{s.n}</div>
                 <div className="mt-2 font-medium">{s.t}</div>
                 <div className="mt-1 text-sm text-white/50">{s.d}</div>

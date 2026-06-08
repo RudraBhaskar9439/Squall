@@ -19,7 +19,7 @@ export function VolGauge() {
   const updates = fields.updates ?? "0";
 
   return (
-    <div className="flex h-full flex-col rounded-3xl border border-white/10 bg-white/[0.03] p-8">
+    <div className="flex h-full flex-col rounded-3xl border border-white/10 bg-[#0b2a40]/35 backdrop-blur-md p-8">
       <div className="flex items-start justify-between">
         <div>
           <div className="text-sm text-white/50">On-chain Volatility Index</div>

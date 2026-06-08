@@ -16,7 +16,19 @@
 }
 
 body {
-  background: #04111f;
+  /* one continuous ocean descent: light surface (top) -> abyss (bottom) */
+  background: linear-gradient(
+    180deg,
+    #2a86c4 0%,
+    #1c6aa0 9%,
+    #14527f 18%,
+    #0d3e63 30%,
+    #092e4a 46%,
+    #061f34 64%,
+    #03121f 82%,
+    #010a14 100%
+  );
+  background-attachment: scroll;
   color: #e7ecf3;
   font-family: var(--font-sans), system-ui, sans-serif;
   overflow-x: hidden;
@@ -35,4 +47,19 @@ body {
   filter: blur(90px);
   opacity: 0.5;
   pointer-events: none;
+}
+
+/* Theme the dapp-kit Connect button to match the dark ocean UI */
+.dappkit-connect button {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #dbe7f3 !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 9999px !important;
+  font-weight: 500 !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(8px);
+  transition: background 0.2s ease;
+}
+.dappkit-connect button:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
 }

@@ -35,7 +35,7 @@ export function Simulation() {
 
       <div className="relative mt-14 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
         <Reveal>
-          <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
+          <div className="rounded-3xl border border-white/10 bg-[#0b2a40]/35 backdrop-blur-md p-6">
             {sim ? <Chart sim={sim} /> : <div className="h-[260px] animate-pulse rounded-xl bg-white/5" />}
             <div className="mt-4 flex gap-6 text-xs text-white/60">
               <span><span className="mr-1.5 inline-block h-2 w-2 rounded-full bg-grape align-middle" />Naive PLP (unhedged)</span>
@@ -46,7 +46,7 @@ export function Simulation() {
         </Reveal>
 
         <Reveal delay={0.1}>
-          <div className="flex h-full flex-col justify-center gap-4 rounded-3xl border border-white/10 bg-white/[0.03] p-6">
+          <div className="flex h-full flex-col justify-center gap-4 rounded-3xl border border-white/10 bg-[#0b2a40]/35 backdrop-blur-md p-6">
             <div className="text-sm text-white/50">Monte Carlo averages ({sim?.monteCarlo.runs ?? "—"} runs)</div>
             <Metric label="APY" naive={sim?.monteCarlo.naive.apy} hedged={sim?.monteCarlo.hedged.apy} fmt={pct} />
             <Metric label="Max drawdown" naive={sim?.monteCarlo.naive.maxDrawdown} hedged={sim?.monteCarlo.hedged.maxDrawdown} fmt={pct} lowerBetter />
