@@ -162,6 +162,39 @@ The hedge **lowered drawdown in 7/7 regimes** and **improved Sharpe in 6/7** —
 the lone exception (low deployment) is the expected insurance-cost tradeoff when
 there's little tail risk to insure. Sound across regimes, and not curve-fit.
 
+### Empirical backtest on real BTC history
+
+Run on **real BTC daily closes** (≈2.7 years, including BTC's actual 51%
+drawdown). Reproducible — the dataset is committed:
+
+```bash
+cd sim && pnpm backtest:historical
+```
+
+| Strategy (real BTC path) | Return (CAGR) | Max drawdown | Sharpe |
+|---|---|---|---|
+| Vol-selling vault (PLP) | ~50% | **20.3%** | 2.10 |
+| Squall (hedged) | ~31% | 20.3% | 1.43 |
+| **Hold BTC (benchmark)** | ~38% | **51.2%** | — |
+
+**The defensible, model-robust finding: being the house cut max drawdown to
+~20% vs BTC's 51%** — a far smoother ride than holding the underlying, while
+staying positive. (Drawdown *shape* is robust to assumptions; absolute return
+is not — see caveats.)
+
+**Honest methodology + caveats:**
+- Real price path → every realized move and drawdown is real. **Implied vol is
+  proxied** (trailing realized × ~1.05 vol-risk premium) since free historical
+  BTC IV isn't available — so absolute returns are assumption-sensitive and the
+  window is a BTC bull market; treat CAGR as illustrative, not a forecast.
+- It ignores fees/slippage and assumes Predict-like fills; **real yield depends
+  on actual on-chain volume**, which only exists at scale on mainnet.
+- The **per-epoch hedge protects single-day crashes** (see the Monte Carlo
+  above) but adds little against *slow multi-day* drawdowns — hence hedged ≈
+  naive drawdown here. A cumulative-drawdown hedge is future work. We report
+  this openly rather than hide it.
+- **Not a yield guarantee. You can lose.**
+
 ## Key design decisions
 
 - **ERC-4626 semantics in Move** — full `deposit/redeem/mint/withdraw` previews +

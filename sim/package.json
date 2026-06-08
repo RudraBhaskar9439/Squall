@@ -6,6 +6,7 @@
   "scripts": {
     "test": "node --experimental-transform-types --test test/*.test.ts",
     "backtest": "node --experimental-transform-types src/run.ts",
+    "backtest:historical": "node --experimental-transform-types src/historical.ts",
     "stress": "node --experimental-transform-types src/stress.ts"
   }
 }
