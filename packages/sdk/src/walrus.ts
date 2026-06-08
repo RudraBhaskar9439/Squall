@@ -31,7 +31,7 @@ export interface WalrusOpts {
 /** Write raw bytes/text to Walrus, returning the content-addressed blobId. */
 export async function writeBlob(data: Uint8Array | string, opts: WalrusOpts = {}): Promise<string> {
   const publisher = opts.publisher ?? WALRUS.publisher;
-  const epochs = opts.epochs ?? 5;
+  const epochs = opts.epochs ?? 30;
   const body = typeof data === "string" ? new TextEncoder().encode(data) : data;
   const res = await fetch(`${publisher}/v1/blobs?epochs=${epochs}`, { method: "PUT", body });
   if (!res.ok) throw new Error(`walrus write failed: ${res.status}`);
