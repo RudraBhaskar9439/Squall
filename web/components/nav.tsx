@@ -21,7 +21,7 @@ export function Nav() {
           <Link href="/#features" className="transition hover:text-white">Features</Link>
           <Link href="/#sim" className="transition hover:text-white">Backtest</Link>
           <Link href="/vault" className="transition hover:text-white">Vault</Link>
-          <Link href="/vault#proof" className="transition hover:text-white">Proof</Link>
+          <Link href="/docs" className="transition hover:text-white">Docs</Link>
         </nav>
         <div className="dappkit-connect">
           <ConnectButton />

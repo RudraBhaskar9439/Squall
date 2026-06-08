@@ -11,7 +11,7 @@ export function Footer() {
           <Link href="/#how" className="transition hover:text-white">How it works</Link>
           <Link href="/#features" className="transition hover:text-white">Features</Link>
           <Link href="/vault" className="transition hover:text-white">Vault</Link>
-          <Link href="/vault#proof" className="transition hover:text-white">Proof</Link>
+          <Link href="/docs" className="transition hover:text-white">Docs</Link>
         </div>
       </div>
     </footer>
