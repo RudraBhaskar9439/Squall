@@ -58,6 +58,28 @@ export function Simulation() {
           </div>
         </Reveal>
       </div>
+
+      <Reveal delay={0.15}>
+        <div className="relative mt-6 overflow-hidden rounded-3xl border border-white/10 bg-[#0b2a40]/35 p-6 backdrop-blur-md sm:p-8">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="rounded-full border border-teal/30 bg-teal/5 px-3 py-1 text-xs font-medium text-teal">
+              Real data
+            </span>
+            <span className="text-sm text-white/55">Empirical backtest on ~2.7 years of real BTC history</span>
+          </div>
+          <p className="mt-4 text-pretty text-lg text-white/85 sm:text-xl">
+            Being the house cut max drawdown to{" "}
+            <b className="font-semibold text-aqua">~20%</b> — versus{" "}
+            <b className="font-semibold text-grape">51%</b> for holding BTC over the same period,
+            while staying positive.
+          </p>
+          <p className="mt-3 max-w-3xl text-xs leading-relaxed text-white/40">
+            Reproducible: <code className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-white/70">pnpm backtest:historical</code> (dataset committed).
+            Implied vol is proxied and the window is a BTC bull market, so absolute return is
+            illustrative — the drawdown comparison is the robust finding. Not a yield guarantee; you can lose.
+          </p>
+        </div>
+      </Reveal>
     </section>
   );
 }
