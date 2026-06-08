@@ -122,6 +122,46 @@ Requires **Sui CLI ≥ 1.73** (matches testnet; older versions lack `coin_regist
 
 ---
 
+## Risk, backtesting & robustness
+
+> **Methodology (read this).** The figures below come from a **seeded Monte Carlo
+> simulation of the strategy logic** (`sim/`), not an empirical historical
+> backtest. Premiums scale with implied vol, realized moves are drawn from a
+> normal distribution plus an injected crash, and the hedge is modelled as a
+> per-epoch loss floor. It demonstrates the strategy's **risk behaviour** (the
+> hedge reduces drawdown) — it is **illustrative, reproducible, and NOT a
+> yield guarantee or a real track record.** Real returns depend on actual
+> Predict trading volume and the implied-vs-realized vol spread, which only
+> emerge on mainnet.
+
+Run it yourself:
+
+```bash
+cd sim
+pnpm backtest    # 1-year path + 1000-scenario Monte Carlo
+pnpm stress      # robustness sweep — 7 regimes × 2000 runs
+```
+
+**Backtest (1y, 1000 Monte Carlo runs):** the hedge gives up a little APY to cut
+the tail — naive PLP ~18.7% APY / 19.1% max drawdown vs. hedged ~17.7% APY /
+**16.5% max drawdown**, higher Sharpe.
+
+**Robustness sweep — max drawdown, naive → hedged (2000 runs each):**
+
+| Regime | naive DD | hedged DD | Sharpe (naive → hedged) |
+|---|---|---|---|
+| Calm (IV 35%) | 15.8% | **11.8%** | 0.30 → 0.43 |
+| Normal (IV 65%) | 18.9% | **16.3%** | 0.86 → 0.88 |
+| High vol (IV 110%) | 25.7% | **19.2%** | 1.21 → 1.57 |
+| Thin edge (realized 95%) | 23.6% | **20.7%** | 0.17 → 0.18 |
+| Fat edge (realized 80%) | 15.0% | **12.4%** | 1.76 → 1.80 |
+| Conservative (40% deployed) | 12.9% | **11.7%** | 0.86 → 0.69 |
+| Aggressive (80% deployed) | 24.7% | **20.8%** | 0.86 → 0.97 |
+
+The hedge **lowered drawdown in 7/7 regimes** and **improved Sharpe in 6/7** —
+the lone exception (low deployment) is the expected insurance-cost tradeoff when
+there's little tail risk to insure. Sound across regimes, and not curve-fit.
+
 ## Key design decisions
 
 - **ERC-4626 semantics in Move** — full `deposit/redeem/mint/withdraw` previews +
