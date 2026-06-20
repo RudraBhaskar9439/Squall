@@ -12,11 +12,30 @@ import {
   type TrackEntry,
 } from "@/lib/strata";
 
-const dusdc = (base: number) => (base / 10 ** DECIMALS.dusdc).toLocaleString(undefined, { maximumFractionDigits: 4 });
-const sharePrice = (e: TrackEntry) =>
-  e.totalShares > 0 ? (e.navAssets / 10 ** DECIMALS.dusdc / (e.totalShares / 10 ** DECIMALS.vstrata)).toFixed(4) : "—";
+const LABEL = SNAPSHOT_LABEL;
 
-const LABEL = SNAPSHOT_LABEL.toUpperCase();
+// formatting helpers ---------------------------------------------------------
+const n2 = (base: number, dec = DECIMALS.dusdc) =>
+  (base / 10 ** dec).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const priceNum = (e: TrackEntry) =>
+  e.totalShares > 0 ? e.navAssets / 10 ** DECIMALS.dusdc / (e.totalShares / 10 ** DECIMALS.vstrata) : 0;
+const pct1 = (vol1e6: number) => `${((vol1e6 / 1e6) * 100).toFixed(1)}%`;
+const dateUTC = (ts: number) =>
+  new Date(ts).toLocaleDateString("en-US", { timeZone: "UTC", month: "short", day: "numeric", year: "numeric" });
+const timeUTC = (ts: number) =>
+  `${new Date(ts).toLocaleString("en-US", {
+    timeZone: "UTC",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  })} UTC`;
+const trunc = (id: string) => (id.length > 10 ? `${id.slice(0, 4)}…${id.slice(-4)}` : id);
+
+const COLS =
+  "grid grid-cols-[120px_repeat(4,minmax(0,1fr))_72px_minmax(200px,auto)] items-center gap-x-4";
 
 function readLive(): TrackEntry[] {
   try {
@@ -32,14 +51,11 @@ export function TrackRecord() {
 
   useEffect(() => {
     let json: TrackEntry[] = [];
-
-    // merge committed (track-record.json) + live (localStorage) snapshots, newest first.
     const merge = () => {
       const byBlob = new Map<string, TrackEntry>();
       [...json, ...readLive()].forEach((e) => byBlob.set(e.blobId, e));
       setEntries([...byBlob.values()].sort((a, b) => b.tsMs - a.tsMs));
     };
-
     fetch("/track-record.json")
       .then((r) => r.json())
       .then((d) => {
@@ -47,7 +63,6 @@ export function TrackRecord() {
         merge();
       })
       .catch(merge);
-
     window.addEventListener(SNAPSHOT_EVENT, merge);
     window.addEventListener("storage", merge);
     return () => {
@@ -67,6 +82,10 @@ export function TrackRecord() {
   }
 
   const total = entries.length;
+  const newest = entries[0];
+  const oldest = entries[total - 1];
+  const ret =
+    oldest && priceNum(oldest) > 0 ? (priceNum(newest) / priceNum(oldest) - 1) * 100 : 0;
 
   return (
     <section id="proof" className="relative mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-16 py-20 sm:py-28 lg:py-32">
@@ -82,43 +101,75 @@ export function TrackRecord() {
         </p>
       </Reveal>
 
-      <div className="relative mt-14 space-y-4">
-        {total === 0 && (
-          <div className="rounded-2xl border border-white/10 bg-[#0b2a40]/35 backdrop-blur-md p-6 text-sm text-white/40">
-            No snapshots yet — make a deposit to write the first one.
+      {/* summary band */}
+      <Reveal delay={0.05}>
+        <div className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/5 sm:grid-cols-4">
+          <Stat label="Current NAV" value={newest ? `${n2(newest.navAssets)}` : "—"} unit="DUSDC" />
+          <Stat
+            label="All-time return"
+            value={total > 1 ? `${ret >= 0 ? "+" : ""}${ret.toFixed(2)}%` : "—"}
+            valueClass={total > 1 ? (ret >= 0 ? "text-teal" : "text-rose-400") : ""}
+          />
+          <Stat label={`${LABEL}s`} value={String(total)} />
+          <Stat label="Live since" value={oldest ? dateUTC(oldest.tsMs) : "—"} />
+        </div>
+      </Reveal>
+
+      {/* table */}
+      <Reveal delay={0.1}>
+        <div className="mt-6 overflow-hidden rounded-2xl border border-white/10 bg-[#0b2a40]/35 backdrop-blur-md">
+          {/* header */}
+          <div className={`${COLS} border-b border-white/10 px-6 py-3 text-[11px] font-medium uppercase tracking-wider text-white/40`}>
+            <div>{LABEL}</div>
+            <div className="text-right">NAV (DUSDC)</div>
+            <div className="text-right">Share price</div>
+            <div className="text-right">Idle</div>
+            <div className="text-right">In PLP</div>
+            <div className="text-right">Vol</div>
+            <div className="text-right">Proof</div>
           </div>
-        )}
-        {entries.map((e, i) => (
-          <Reveal key={e.blobId} delay={i * 0.06}>
+
+          {total === 0 && (
+            <div className="px-6 py-8 text-sm text-white/40">
+              No snapshots yet — make a deposit to write the first one.
+            </div>
+          )}
+
+          {entries.map((e, i) => (
             <div
-              className={`grid items-center gap-4 rounded-2xl border bg-[#0b2a40]/35 backdrop-blur-md p-6 md:grid-cols-[auto_1fr_auto] ${
-                e.isLive ? "border-aqua/40" : "border-white/10"
+              key={e.blobId}
+              className={`${COLS} gap-y-1 border-t border-white/5 px-6 py-4 transition hover:bg-white/[0.025] ${
+                e.isLive ? "bg-aqua/[0.04]" : ""
               }`}
             >
-              <div className="font-mono text-sm text-sui">
-                {LABEL} #{total - i}
+              {/* id */}
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-sm text-sui">#{total - i}</span>
                 {e.isLive && (
-                  <span className="ml-2 rounded-full border border-aqua/40 bg-aqua/10 px-2 py-0.5 text-[10px] font-sans text-aqua">
+                  <span className="rounded-full border border-aqua/40 bg-aqua/10 px-1.5 py-0.5 text-[10px] text-aqua">
                     live
                   </span>
                 )}
               </div>
-              <div>
-                <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm">
-                  <span className="text-white/80">NAV <b className="font-mono">{dusdc(e.navAssets)}</b> DUSDC</span>
-                  <span className="text-white/50">price <b className="font-mono text-white/80">{sharePrice(e)}</b></span>
-                  <span className="text-white/50">idle <b className="font-mono text-white/80">{dusdc(e.idle)}</b></span>
-                  <span className="text-white/50">PLP <b className="font-mono text-white/80">{dusdc(e.deployed)}</b></span>
-                  <span className="text-white/50">vol <b className="font-mono text-white/80">{(e.volIndex / 1e6 * 100).toFixed(1)}%</b></span>
-                </div>
-                <div className="mt-1 text-xs text-white/40">
-                  {new Date(e.tsMs).toLocaleString()} · {e.rationale}
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
+
+              {/* numbers */}
+              <div className="text-right font-mono text-sm tabular-nums text-white/90">{n2(e.navAssets)}</div>
+              <div className="text-right font-mono text-sm tabular-nums text-white/70">{priceNum(e).toFixed(4)}</div>
+              <div className="text-right font-mono text-sm tabular-nums text-white/70">{n2(e.idle)}</div>
+              <div className="text-right font-mono text-sm tabular-nums text-white/70">{n2(e.deployed)}</div>
+              <div className="text-right font-mono text-sm tabular-nums text-white/70">{pct1(e.volIndex)}</div>
+
+              {/* proof */}
+              <div className="flex items-center justify-end gap-2">
                 <button
                   onClick={() => verify(e)}
-                  className="rounded-full border border-white/15 px-3 py-1.5 text-xs text-white/80 transition hover:bg-white/5"
+                  className={`rounded-full border px-2.5 py-1 text-xs transition ${
+                    verified[e.blobId] === true
+                      ? "border-teal/40 bg-teal/10 text-teal"
+                      : verified[e.blobId] === false
+                        ? "border-rose-400/40 bg-rose-400/10 text-rose-300"
+                        : "border-white/15 text-white/70 hover:bg-white/5"
+                  }`}
                 >
                   {verified[e.blobId] === undefined ? "Verify" : verified[e.blobId] ? "✓ verified" : "✗ mismatch"}
                 </button>
@@ -126,15 +177,43 @@ export function TrackRecord() {
                   href={walruscanUrl(e.blobId)}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-full border border-sui/30 bg-sui/5 px-3 py-1.5 text-xs text-sui transition hover:bg-sui/10"
+                  title={e.blobId}
+                  className="flex items-center gap-1 rounded-full border border-sui/25 bg-sui/5 px-2.5 py-1 font-mono text-xs text-sui transition hover:bg-sui/10"
                 >
-                  Walruscan ↗
+                  {trunc(e.blobId)} <span className="text-[10px]">↗</span>
                 </a>
               </div>
+
+              {/* sub-line: timestamp + rationale */}
+              <div className="col-span-full mt-0.5 text-xs text-white/40">
+                {timeUTC(e.tsMs)} · {e.rationale}
+              </div>
             </div>
-          </Reveal>
-        ))}
-      </div>
+          ))}
+        </div>
+      </Reveal>
     </section>
+  );
+}
+
+function Stat({
+  label,
+  value,
+  unit,
+  valueClass = "",
+}: {
+  label: string;
+  value: string;
+  unit?: string;
+  valueClass?: string;
+}) {
+  return (
+    <div className="bg-[#0b2a40]/50 px-5 py-4">
+      <div className="text-xs text-white/40">{label}</div>
+      <div className="mt-1 flex items-baseline gap-1">
+        <span className={`font-mono text-xl font-semibold tabular-nums ${valueClass}`}>{value}</span>
+        {unit && <span className="text-xs text-white/40">{unit}</span>}
+      </div>
+    </div>
   );
 }
