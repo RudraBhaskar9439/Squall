@@ -2,22 +2,24 @@
 
 import { motion, useScroll, useTransform } from "motion/react";
 
+// `phase` (0..1) = how far along its rise the bubble already is at load, applied
+// as a negative delay so the scene is full of life the instant the page opens.
 const BUBBLES = [
-  { l: "8%", s: 5, delay: 0, dur: 17 },
-  { l: "19%", s: 7, delay: 5, dur: 21 },
-  { l: "31%", s: 4, delay: 9, dur: 15 },
-  { l: "46%", s: 6, delay: 2, dur: 19 },
-  { l: "58%", s: 8, delay: 7, dur: 22 },
-  { l: "71%", s: 4, delay: 4, dur: 16 },
-  { l: "83%", s: 6, delay: 10, dur: 20 },
-  { l: "92%", s: 5, delay: 6, dur: 18 },
+  { l: "8%", s: 5, phase: 0.1, dur: 17 },
+  { l: "19%", s: 7, phase: 0.55, dur: 21 },
+  { l: "31%", s: 4, phase: 0.3, dur: 15 },
+  { l: "46%", s: 6, phase: 0.8, dur: 19 },
+  { l: "58%", s: 8, phase: 0.2, dur: 22 },
+  { l: "71%", s: 4, phase: 0.65, dur: 16 },
+  { l: "83%", s: 6, phase: 0.45, dur: 20 },
+  { l: "92%", s: 5, phase: 0.9, dur: 18 },
 ];
 
 type Lane = {
   y: string;
   dir: 1 | -1;
   dur: number;
-  delay: number;
+  phase: number; // 0..1 — how far across its lane the swimmer is at load
   scale: number;
   op: number;
   kind: "fish" | "school" | "shark";
@@ -25,12 +27,17 @@ type Lane = {
 };
 
 // Swimmers live only in the hero (faded out on scroll), so they never cross data.
+// phases between ~0.15 and ~0.85 keep each one on-screen at load.
 const SWIMMERS: Lane[] = [
-  { y: "18%", dir: 1, dur: 38, delay: 0, scale: 0.8, op: 0.7, kind: "fish", color: "#6fbcf0" },
-  { y: "30%", dir: -1, dur: 46, delay: 5, scale: 0.6, op: 0.5, kind: "school", color: "#2dd4bf" },
-  { y: "44%", dir: 1, dur: 62, delay: 3, scale: 1, op: 0.4, kind: "shark" },
-  { y: "62%", dir: -1, dur: 40, delay: 8, scale: 0.7, op: 0.55, kind: "fish", color: "#a78bfa" },
-  { y: "74%", dir: 1, dur: 34, delay: 12, scale: 0.55, op: 0.5, kind: "fish", color: "#6fbcf0" },
+  { y: "12%", dir: 1, dur: 30, phase: 0.55, scale: 0.55, op: 0.5, kind: "fish", color: "#6fbcf0" },
+  { y: "20%", dir: -1, dur: 40, phase: 0.25, scale: 0.8, op: 0.65, kind: "fish", color: "#a78bfa" },
+  { y: "30%", dir: -1, dur: 44, phase: 0.7, scale: 0.6, op: 0.5, kind: "school", color: "#2dd4bf" },
+  { y: "40%", dir: 1, dur: 56, phase: 0.4, scale: 1, op: 0.38, kind: "shark" },
+  { y: "50%", dir: 1, dur: 34, phase: 0.82, scale: 0.7, op: 0.55, kind: "fish", color: "#6fbcf0" },
+  { y: "58%", dir: -1, dur: 38, phase: 0.15, scale: 0.6, op: 0.5, kind: "fish", color: "#2dd4bf" },
+  { y: "66%", dir: 1, dur: 42, phase: 0.6, scale: 0.85, op: 0.45, kind: "school", color: "#6fbcf0" },
+  { y: "74%", dir: -1, dur: 30, phase: 0.35, scale: 0.5, op: 0.55, kind: "fish", color: "#a78bfa" },
+  { y: "82%", dir: 1, dur: 36, phase: 0.85, scale: 0.65, op: 0.4, kind: "fish", color: "#6fbcf0" },
 ];
 
 export function SeaBackground() {
@@ -71,7 +78,7 @@ export function SeaBackground() {
           className="absolute rounded-full bg-white/[0.08]"
           style={{ left: b.l, bottom: -20, width: b.s, height: b.s }}
           animate={{ y: ["0vh", "-115vh"], opacity: [0, 0.4, 0] }}
-          transition={{ duration: b.dur, delay: b.delay, repeat: Infinity, ease: "easeIn" }}
+          transition={{ duration: b.dur, delay: -b.phase * b.dur, repeat: Infinity, ease: "easeIn" }}
         />
       ))}
 
@@ -84,7 +91,7 @@ export function SeaBackground() {
   );
 }
 
-function Swimmer({ y, dir, dur, delay, scale, op, kind, color }: Lane) {
+function Swimmer({ y, dir, dur, phase, scale, op, kind, color }: Lane) {
   const from = dir === 1 ? "-18vw" : "118vw";
   const to = dir === 1 ? "118vw" : "-18vw";
   return (
@@ -93,7 +100,7 @@ function Swimmer({ y, dir, dur, delay, scale, op, kind, color }: Lane) {
       style={{ top: y, opacity: op }}
       initial={{ x: from }}
       animate={{ x: [from, to] }}
-      transition={{ duration: dur, delay, repeat: Infinity, ease: "linear" }}
+      transition={{ duration: dur, delay: -phase * dur, repeat: Infinity, ease: "linear" }}
     >
       <div style={{ transform: `scaleX(${dir === 1 ? 1 : -1}) scale(${scale})` }}>
         <motion.div animate={{ y: [0, -12, 0, 10, 0] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}>
