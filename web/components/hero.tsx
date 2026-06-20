@@ -109,9 +109,17 @@ export function Hero() {
   );
 }
 
-const D1 = "M-220 260 q150 -120 300 0 t300 0 t300 0 t300 0 t300 0 t300 0";
-const D2 = "M-220 300 q150 -90 300 0 t300 0 t300 0 t300 0 t300 0 t300 0";
-const D3 = "M-220 220 q150 -150 300 0 t300 0 t300 0 t300 0 t300 0 t300 0";
+// Build a wave that runs far past both edges of the viewport (16 humps from
+// well off-screen left to well off-screen right) so the drift animation never
+// exposes an end-cap — the wave reads as full-bleed across the whole page.
+function wave(y: number, amp: number) {
+  let d = `M-900 ${y} q150 ${-amp} 300 0`;
+  for (let i = 0; i < 16; i++) d += " t300 0";
+  return d;
+}
+const D1 = wave(260, 120);
+const D2 = wave(300, 90);
+const D3 = wave(220, 150);
 
 // One drifting wave layer. Each layer is its own compositor texture: the only
 // thing that animates is a CSS transform (translateX), so the browser slides a
@@ -146,7 +154,7 @@ function WaveLayer({
       animate={animate ? { x: [0, -dist, 0] } : undefined}
       transition={{ duration, repeat: Infinity, ease: "easeInOut" }}
     >
-      <svg viewBox="0 0 1200 520" className="w-[160vw] min-w-[1100px]" aria-hidden="true">
+      <svg viewBox="0 0 1200 520" className="w-[160vw] min-w-[1100px] overflow-visible" aria-hidden="true">
         <path d={d} fill="none" stroke="url(#hw)" strokeWidth={width} strokeLinecap="round" />
       </svg>
     </motion.div>
