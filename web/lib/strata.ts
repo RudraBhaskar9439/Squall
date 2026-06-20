@@ -21,6 +21,9 @@ export const txUrl = (digest: string) => `https://suiscan.xyz/testnet/tx/${diges
 
 export const WALRUS_AGGREGATOR = "https://aggregator.walrus-testnet.walrus.space";
 export const WALRUS_PUBLISHER = "https://publisher.walrus-testnet.walrus.space";
+// How many Walrus epochs to keep each snapshot. A "track record" must outlive
+// the demo, so store for a long horizon (lower this if the publisher rejects it).
+export const WALRUS_EPOCHS = 53;
 export const walrusUrl = (blobId: string) => `${WALRUS_AGGREGATOR}/v1/blobs/${blobId}`;
 // Public Walrus blob explorer.
 export const walruscanUrl = (blobId: string) => `https://walruscan.com/testnet/blob/${blobId}`;
@@ -41,6 +44,7 @@ export type TrackEntry = {
   deployed: number;
   volIndex: number;
   rationale: string;
+  prevBlob?: string; // blobId of the previous snapshot — hash-chains the history
   blobId: string;
   isLive?: boolean; // written live from the dashboard this session
 };
@@ -48,7 +52,7 @@ export type TrackEntry = {
 export type SnapshotInput = Omit<TrackEntry, "blobId" | "isLive">;
 
 /** PUT a NAV snapshot to the Walrus testnet publisher; returns its content-addressed blobId. */
-export async function writeSnapshotToWalrus(snap: SnapshotInput, epochs = 5): Promise<string> {
+export async function writeSnapshotToWalrus(snap: SnapshotInput, epochs = WALRUS_EPOCHS): Promise<string> {
   const body = new TextEncoder().encode(JSON.stringify(snap));
   const res = await fetch(`${WALRUS_PUBLISHER}/v1/blobs?epochs=${epochs}`, { method: "PUT", body });
   if (!res.ok) throw new Error(`Walrus write failed (${res.status})`);

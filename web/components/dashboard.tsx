@@ -81,6 +81,21 @@ export function VaultDashboard() {
       const sIdle = vf ? pu64(vf.idle) : 0;
       const sDeployed = vf ? pu64(vf.deployed_value) : 0;
       const sTreasury = vf?.treasury as { fields?: { total_supply?: unknown } } | undefined;
+
+      // hash-chain: link this snapshot to the most recent one (live, else the
+      // newest committed seed) so the whole history is tamper-evident.
+      const live: TrackEntry[] = JSON.parse(localStorage.getItem(LIVE_SNAPSHOTS_KEY) || "[]");
+      let prevBlob = live[0]?.blobId ?? "";
+      if (!prevBlob) {
+        try {
+          const tr = await fetch("/track-record.json").then((r) => r.json());
+          const head = (tr.entries ?? []).sort((a: TrackEntry, b: TrackEntry) => b.tsMs - a.tsMs)[0];
+          prevBlob = head?.blobId ?? "";
+        } catch {
+          /* no seed; start a fresh chain */
+        }
+      }
+
       const snap = {
         epoch: Date.now(),
         tsMs: Date.now(),
@@ -90,11 +105,11 @@ export function VaultDashboard() {
         deployed: sDeployed,
         volIndex: of ? pu64(of.value) : 0,
         rationale: `${action} (${detail}): NAV committed to Walrus`,
+        prevBlob,
       };
       const blobId = await writeSnapshotToWalrus(snap);
       const entry: TrackEntry = { ...snap, blobId, isLive: true };
-      const prev: TrackEntry[] = JSON.parse(localStorage.getItem(LIVE_SNAPSHOTS_KEY) || "[]");
-      localStorage.setItem(LIVE_SNAPSHOTS_KEY, JSON.stringify([entry, ...prev].slice(0, 25)));
+      localStorage.setItem(LIVE_SNAPSHOTS_KEY, JSON.stringify([entry, ...live].slice(0, 25)));
       window.dispatchEvent(new CustomEvent(SNAPSHOT_EVENT));
       toast.push({
         variant: "success",

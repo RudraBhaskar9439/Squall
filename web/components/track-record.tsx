@@ -71,11 +71,19 @@ export function TrackRecord() {
     };
   }, []);
 
-  async function verify(e: TrackEntry) {
+  // Re-fetch the blob from Walrus and confirm both its contents (NAV) and its
+  // chain link (prevBlob must equal the previous snapshot's blobId).
+  async function verify(e: TrackEntry, i: number) {
     try {
       const r = await fetch(walrusUrl(e.blobId));
       const blob = await r.json();
-      setVerified((v) => ({ ...v, [e.blobId]: blob.navAssets === e.navAssets }));
+      const navOk = blob.navAssets === e.navAssets;
+      const older = entries[i + 1];
+      const chainOk =
+        typeof blob.prevBlob === "string" && blob.prevBlob !== ""
+          ? !!older && blob.prevBlob === older.blobId
+          : true; // seed snapshots predate the hash-chain
+      setVerified((v) => ({ ...v, [e.blobId]: navOk && chainOk }));
     } catch {
       setVerified((v) => ({ ...v, [e.blobId]: false }));
     }
@@ -96,8 +104,9 @@ export function TrackRecord() {
         </h2>
         <p className="mt-4 max-w-2xl text-white/55">
           Every vault action writes an immutable, content-addressed snapshot to Walrus: NAV,
-          positions and rationale. Each one re-fetches and verifies on demand, and links straight
-          to Walruscan. A live, verifiable history no off-chain fund can offer.
+          positions and rationale. Each snapshot is hash-chained to the one before it, so the whole
+          history is tamper-evident, re-fetch any entry to confirm both its contents and its link.
+          A live, verifiable record no off-chain fund can offer.
         </p>
       </Reveal>
 
@@ -143,11 +152,19 @@ export function TrackRecord() {
               }`}
             >
               {/* id */}
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-1.5">
                 <span className="font-mono text-sm text-sui">#{total - i}</span>
                 {e.isLive && (
                   <span className="rounded-full border border-aqua/40 bg-aqua/10 px-1.5 py-0.5 text-[10px] text-aqua">
                     live
+                  </span>
+                )}
+                {e.prevBlob && (
+                  <span
+                    title={`hash-chained to ${e.prevBlob}`}
+                    className="rounded-full border border-white/15 px-1.5 py-0.5 text-[10px] text-white/45"
+                  >
+                    🔗 chained
                   </span>
                 )}
               </div>
@@ -162,7 +179,7 @@ export function TrackRecord() {
               {/* proof */}
               <div className="flex items-center justify-end gap-2">
                 <button
-                  onClick={() => verify(e)}
+                  onClick={() => verify(e, i)}
                   className={`rounded-full border px-2.5 py-1 text-xs transition ${
                     verified[e.blobId] === true
                       ? "border-teal/40 bg-teal/10 text-teal"
