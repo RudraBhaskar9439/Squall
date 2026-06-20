@@ -4,11 +4,23 @@ import {
   ConnectButton,
   useCurrentAccount,
   useSignAndExecuteTransaction,
+  useSuiClient,
   useSuiClientQuery,
 } from "@mysten/dapp-kit";
 import { Transaction, coinWithBalance } from "@mysten/sui/transactions";
 import { useEffect, useState } from "react";
-import { STRATA, TYPES, DECIMALS, OFFSET_POW, txUrl } from "@/lib/strata";
+import {
+  STRATA,
+  TYPES,
+  DECIMALS,
+  OFFSET_POW,
+  txUrl,
+  walruscanUrl,
+  writeSnapshotToWalrus,
+  LIVE_SNAPSHOTS_KEY,
+  SNAPSHOT_EVENT,
+  type TrackEntry,
+} from "@/lib/strata";
 import { useToast } from "./toast";
 
 function pu64(f: unknown): number {
@@ -28,6 +40,7 @@ type Activity = { id: number; action: string; detail: string; digest: string };
 export function VaultDashboard() {
   const account = useCurrentAccount();
   const toast = useToast();
+  const client = useSuiClient();
   const { mutate: signAndExecute, isPending } = useSignAndExecuteTransaction();
   const [deposit, setDeposit] = useState("");
   const [withdraw, setWithdraw] = useState("");
@@ -50,6 +63,48 @@ export function VaultDashboard() {
       localStorage.setItem("strata-activity", JSON.stringify(next));
       return next;
     });
+  }
+
+  // After any vault action, snapshot the fresh on-chain NAV to Walrus so the
+  // proof tab updates instantly — the verifiable track record in real time.
+  async function recordSnapshot(action: string, detail: string) {
+    try {
+      toast.push({ variant: "info", title: "Recording proof to Walrus…", desc: "writing an immutable NAV snapshot" });
+      const [vaultObj, volObj] = await Promise.all([
+        client.getObject({ id: STRATA.vault, options: { showContent: true } }),
+        client.getObject({ id: STRATA.volIndex, options: { showContent: true } }),
+      ]);
+      const vc = vaultObj.data?.content;
+      const vf = (vc && "fields" in vc ? vc.fields : null) as Record<string, unknown> | null;
+      const oc = volObj.data?.content;
+      const of = (oc && "fields" in oc ? oc.fields : null) as Record<string, unknown> | null;
+      const sIdle = vf ? pu64(vf.idle) : 0;
+      const sDeployed = vf ? pu64(vf.deployed_value) : 0;
+      const sTreasury = vf?.treasury as { fields?: { total_supply?: unknown } } | undefined;
+      const snap = {
+        epoch: Date.now(),
+        tsMs: Date.now(),
+        navAssets: sIdle + sDeployed,
+        totalShares: pu64(sTreasury?.fields?.total_supply),
+        idle: sIdle,
+        deployed: sDeployed,
+        volIndex: of ? pu64(of.value) : 0,
+        rationale: `${action} (${detail}) — NAV committed to Walrus`,
+      };
+      const blobId = await writeSnapshotToWalrus(snap);
+      const entry: TrackEntry = { ...snap, blobId, isLive: true };
+      const prev: TrackEntry[] = JSON.parse(localStorage.getItem(LIVE_SNAPSHOTS_KEY) || "[]");
+      localStorage.setItem(LIVE_SNAPSHOTS_KEY, JSON.stringify([entry, ...prev].slice(0, 25)));
+      window.dispatchEvent(new CustomEvent(SNAPSHOT_EVENT));
+      toast.push({
+        variant: "success",
+        title: "Proof stored on Walrus",
+        desc: `NAV ${fmt(snap.navAssets, DECIMALS.dusdc)} DUSDC · immutable`,
+        href: walruscanUrl(blobId),
+      });
+    } catch (e) {
+      toast.push({ variant: "error", title: "Walrus snapshot skipped", desc: e instanceof Error ? e.message : String(e) });
+    }
   }
 
   const vaultQ = useSuiClientQuery("getObject", { id: STRATA.vault, options: { showContent: true } });
@@ -98,6 +153,8 @@ export function VaultDashboard() {
           logActivity(action, detail, r.digest);
           clear();
           setTimeout(refetchAll, 1500);
+          // snapshot the resulting NAV to Walrus (fire-and-forget; gives the chain a moment to settle)
+          setTimeout(() => recordSnapshot(action, detail), 1500);
         },
         onError: (e) => toast.push({ variant: "error", title: `${action} failed`, desc: e.message }),
       },

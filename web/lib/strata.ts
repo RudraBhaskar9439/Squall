@@ -20,7 +20,17 @@ export const EXPLORER = "https://suiscan.xyz/testnet/object";
 export const txUrl = (digest: string) => `https://suiscan.xyz/testnet/tx/${digest}`;
 
 export const WALRUS_AGGREGATOR = "https://aggregator.walrus-testnet.walrus.space";
+export const WALRUS_PUBLISHER = "https://publisher.walrus-testnet.walrus.space";
 export const walrusUrl = (blobId: string) => `${WALRUS_AGGREGATOR}/v1/blobs/${blobId}`;
+// Public Walrus blob explorer.
+export const walruscanUrl = (blobId: string) => `https://walruscan.com/testnet/blob/${blobId}`;
+
+// Live, client-written snapshots shared between the dashboard and the proof tab.
+export const LIVE_SNAPSHOTS_KEY = "strata-live-snapshots";
+export const SNAPSHOT_EVENT = "strata:snapshot";
+
+// What each Walrus snapshot entry is called in the UI. Change here to rebrand.
+export const SNAPSHOT_LABEL = "Attestation";
 
 export type TrackEntry = {
   epoch: number;
@@ -32,4 +42,21 @@ export type TrackEntry = {
   volIndex: number;
   rationale: string;
   blobId: string;
+  isLive?: boolean; // written live from the dashboard this session
 };
+
+export type SnapshotInput = Omit<TrackEntry, "blobId" | "isLive">;
+
+/** PUT a NAV snapshot to the Walrus testnet publisher; returns its content-addressed blobId. */
+export async function writeSnapshotToWalrus(snap: SnapshotInput, epochs = 5): Promise<string> {
+  const body = new TextEncoder().encode(JSON.stringify(snap));
+  const res = await fetch(`${WALRUS_PUBLISHER}/v1/blobs?epochs=${epochs}`, { method: "PUT", body });
+  if (!res.ok) throw new Error(`Walrus write failed (${res.status})`);
+  const json = (await res.json()) as {
+    newlyCreated?: { blobObject?: { blobId?: string } };
+    alreadyCertified?: { blobId?: string };
+  };
+  const blobId = json.newlyCreated?.blobObject?.blobId ?? json.alreadyCertified?.blobId;
+  if (!blobId) throw new Error("Walrus: no blobId in response");
+  return blobId;
+}

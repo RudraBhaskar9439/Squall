@@ -13,7 +13,7 @@ const features = [
   },
   {
     title: "Verifiable track record",
-    body: "Every epoch's NAV, PnL and decisions are written to Walrus — a provable, tamper-proof performance history.",
+    body: "Every vault action's NAV, PnL and rationale is written to Walrus — a provable, tamper-proof performance history.",
     icon: "✓",
   },
   {

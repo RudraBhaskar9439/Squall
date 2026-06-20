@@ -19,7 +19,7 @@ const GLOSSARY: [string, ReactNode][] = [
   ["Premium", "What option buyers pay sellers. The vault, as the house, collects this premium as its core yield source."],
   ["Realized volatility", "How much the price actually moved (vs implied, what was expected). Sellers profit when implied > realized."],
   ["Sharpe ratio", "Return per unit of risk; higher is better risk-adjusted performance. The hedge raises Sharpe in most regimes."],
-  ["Snapshot (epoch)", "One recorded moment of the vault's state written to Walrus. 'Epoch' here = a snapshot sequence number, not a Sui/Walrus epoch."],
+  ["Attestation", "One recorded moment of the vault's state — NAV, positions and rationale — written to Walrus as an immutable, content-addressed blob. A numbered entry in the provable track record."],
   ["SVI", "Stochastic Volatility Inspired — a standard model of the implied-vol 'smile'. Predict publishes SVI params; Squall turns them into the vol index."],
   ["Testnet", "A live blockchain for testing with valueless tokens (here, dUSDC). Squall is on Sui testnet; mainnet is next."],
   ["Vault", "A smart contract that pools deposits and runs a strategy. Squall's vault supplies the Predict PLP and issues vSTRATA shares."],
