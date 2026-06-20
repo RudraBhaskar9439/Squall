@@ -1,0 +1,212 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="squall-arch" name="Squall — Architecture">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="1250" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ===================== BAND CONTAINERS ===================== -->
+        <mxCell id="c_web" value="Web Frontend — Next.js  (app/ · components/ · lib/)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf2fd;strokeColor=#6c8ebf;verticalAlign=top;align=left;fontStyle=1;fontSize=14;spacingLeft=12;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="140" width="1140" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="c_off" value="Off-chain Services  (TypeScript / Node)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eef7ec;strokeColor=#82b366;verticalAlign=top;align=left;fontStyle=1;fontSize=14;spacingLeft=12;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="410" width="1140" height="345" as="geometry" />
+        </mxCell>
+        <mxCell id="c_keeper" value="keeper/ — automation loop  (index.ts · poll 60s · resumable)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e6f2e1;strokeColor=#82b366;verticalAlign=top;align=left;fontStyle=1;fontSize=12;spacingLeft=10;spacingTop=6;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="65" y="452" width="520" height="285" as="geometry" />
+        </mxCell>
+        <mxCell id="c_sdk" value="@strata/sdk" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e6f2e1;strokeColor=#82b366;verticalAlign=top;align=left;fontStyle=1;fontSize=12;spacingLeft=10;spacingTop=6;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="605" y="452" width="270" height="165" as="geometry" />
+        </mxCell>
+        <mxCell id="c_sim" value="sim/ — backtest engine" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e6f2e1;strokeColor=#82b366;verticalAlign=top;align=left;fontStyle=1;fontSize=12;spacingLeft=10;spacingTop=6;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="895" y="452" width="265" height="285" as="geometry" />
+        </mxCell>
+        <mxCell id="c_onchain" value="On-chain — Sui Move package `strata` (Squall) · testnet" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff4e6;strokeColor=#d79b00;verticalAlign=top;align=left;fontStyle=1;fontSize=14;spacingLeft=12;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="40" y="790" width="1140" height="400" as="geometry" />
+        </mxCell>
+        <mxCell id="c_ext" value="Sui Ecosystem  (external)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f3eef7;strokeColor=#9673a6;verticalAlign=top;align=left;fontStyle=1;fontSize=14;spacingLeft=12;spacingTop=8;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="140" width="440" height="1050" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== USER ===================== -->
+        <mxCell id="user" value="&lt;b&gt;End User&lt;/b&gt;&lt;br&gt;Sui Wallet / zkLogin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="470" y="40" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== WEB NODES ===================== -->
+        <mxCell id="w_land" value="&lt;b&gt;/ Landing&lt;/b&gt;&lt;br&gt;Hero · Stats · Features&lt;br&gt;HowItWorks · Simulation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="70" y="195" width="230" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="w_vault" value="&lt;b&gt;/vault Dashboard&lt;/b&gt;&lt;br&gt;VolGauge (live index)&lt;br&gt;VaultDashboard (deposit/withdraw)&lt;br&gt;TrackRecord (Walrus proof)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="320" y="195" width="250" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="w_docs" value="&lt;b&gt;/docs/*&lt;/b&gt;&lt;br&gt;concepts · risk&lt;br&gt;developers · glossary" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="590" y="195" width="150" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="w_lib" value="&lt;b&gt;lib/strata.ts&lt;/b&gt;&lt;br&gt;testnet IDs · TYPES&lt;br&gt;DECIMALS · Walrus cfg" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="760" y="195" width="180" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="w_json" value="&lt;b&gt;public/*.json&lt;/b&gt;&lt;br&gt;simulation.json&lt;br&gt;historical.json&lt;br&gt;track-record.json" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="970" y="195" width="180" height="95" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== KEEPER NODES ===================== -->
+        <mxCell id="k_vol" value="&lt;b&gt;VolIndexUpdater&lt;/b&gt;&lt;br&gt;read front oracle → ATM IV&lt;br&gt;debounce (&amp;ge;500 bps) → push" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="85" y="498" width="230" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="k_snap" value="&lt;b&gt;Snapshotter&lt;/b&gt;&lt;br&gt;capture vault NAV + index&lt;br&gt;→ immutable Walrus blob" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="335" y="498" width="230" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="k_sui" value="&lt;b&gt;SuiChainClient&lt;/b&gt; (adapter)&lt;br&gt;pushVolIndex · readVaultState · readVolIndex" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="85" y="580" width="230" height="58" as="geometry" />
+        </mxCell>
+        <mxCell id="k_mock" value="MockChainClient&lt;br&gt;(test stub)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="335" y="580" width="110" height="58" as="geometry" />
+        </mxCell>
+        <mxCell id="k_state" value="StateStore&lt;br&gt;(json, resume)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="455" y="580" width="110" height="58" as="geometry" />
+        </mxCell>
+        <mxCell id="k_index" value="index.ts — entry: poll loop (POLL_MS=60s) · logger" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="85" y="648" width="480" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== SDK NODES ===================== -->
+        <mxCell id="s_svi" value="&lt;b&gt;svi.ts&lt;/b&gt;&lt;br&gt;SVI → IV math&lt;br&gt;atmIndexFromOracle" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="625" y="498" width="110" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="s_walrus" value="&lt;b&gt;walrus.ts&lt;/b&gt;&lt;br&gt;blob I/O&lt;br&gt;write/readSnapshot" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="745" y="498" width="110" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="s_const" value="constants.ts — TESTNET + STRATA addresses" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="625" y="558" width="230" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== SIM NODES ===================== -->
+        <mxCell id="m_model" value="model.ts — simulate() / monteCarlo()  (naive vs hedged)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="915" y="498" width="225" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="m_hist" value="historical.ts — real BTC empirical backtest" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="915" y="545" width="225" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="m_stress" value="stress.ts&lt;br&gt;regime sweep" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="915" y="592" width="108" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="m_rng" value="rng.ts&lt;br&gt;seeded PRNG" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="592" width="110" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="m_run" value="run.ts — CLI → writes web/public/*.json" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="915" y="639" width="225" height="42" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== ON-CHAIN NODES ===================== -->
+        <mxCell id="o_vault" value="&lt;b&gt;vault.move — Vault&amp;lt;A,S&amp;gt;&lt;/b&gt;  (shared)&lt;br&gt;&lt;br&gt;ERC-4626 core: deposit / redeem&lt;br&gt;take_for_strategy · report&lt;br&gt;idle: Balance&amp;lt;A&amp;gt; · deployed_value · treasury&lt;br&gt;accrue_fees (high-water mark)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="80" y="840" width="320" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="o_strat" value="&lt;b&gt;predict_strategy.move&lt;/b&gt;  (shared)&lt;br&gt;PredictStrategy&amp;lt;Quote,Share&amp;gt;&lt;br&gt;&lt;br&gt;allocate → supply · divest → withdraw&lt;br&gt;harvest → report&lt;br&gt;holds StrategyCap + Balance&amp;lt;PLP&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="430" y="840" width="320" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="o_volidx" value="&lt;b&gt;vol_index.move — VolIndex&lt;/b&gt;  (shared)&lt;br&gt;&lt;br&gt;update(value, ts) · EMA smoothing&lt;br&gt;value 1e6-scaled (e.g. 650000 = 65%)&lt;br&gt;emits IndexUpdated&lt;br&gt;gated by IndexPublisherCap" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="790" y="840" width="320" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="o_access" value="&lt;b&gt;access.move — Capabilities&lt;/b&gt;&lt;br&gt;AdminCap · StrategyCap · KeeperCap&lt;br&gt;(each bound to a vault_id)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="80" y="975" width="320" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="o_vstrata" value="&lt;b&gt;vstrata.move&lt;/b&gt;&lt;br&gt;VSTRATA share token&lt;br&gt;+ TreasuryCap" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="430" y="975" width="200" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="o_math" value="&lt;b&gt;math.move&lt;/b&gt;&lt;br&gt;ERC-4626 conversion&lt;br&gt;inflation-attack guard" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="660" y="975" width="200" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="o_fees" value="&lt;b&gt;fees.move&lt;/b&gt;&lt;br&gt;mgmt + performance fee&lt;br&gt;high-water mark" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="890" y="975" width="220" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="o_deploy" value="Deployed (testnet):  package 0x6db7afe5…6d3f  ·  vault 0xbc279cb0…3d9c  ·  strategy 0x32d8d720…9572  ·  volIndex 0x75217375…7f0c" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#d79b00;fontSize=10;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1065" width="1030" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== EXTERNAL NODES ===================== -->
+        <mxCell id="e_rpc" value="&lt;b&gt;Sui Network&lt;/b&gt;&lt;br&gt;fullnode JSON-RPC  ·  signed PTBs  ·  object reads" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1245" y="190" width="390" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="e_walrus" value="&lt;b&gt;Walrus&lt;/b&gt;&lt;br&gt;&lt;br&gt;publisher: PUT /v1/blobs?epochs=30&lt;br&gt;aggregator: GET /v1/blobs/{blobId}&lt;br&gt;content-addressed · immutable&lt;br&gt;→ verifiable NAV track record" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="1245" y="265" width="390" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="e_predict" value="&lt;b&gt;DeepBook Predict&lt;/b&gt;  (testnet)&lt;br&gt;&lt;br&gt;predict::supply / withdraw  →  PLP&lt;br&gt;OracleSVI — vol-surface params (1e9)&lt;br&gt;vol-priced order book (real flow)&lt;br&gt;pkg 0xf5ea2b37…5138" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="1245" y="620" width="390" height="170" as="geometry" />
+        </mxCell>
+
+        <!-- ===================== EDGES ===================== -->
+        <mxCell id="x1" value="deposit / withdraw" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=10;" edge="1" parent="1" source="user" target="w_vault">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x2" value="vault::deposit / redeem&#10;(signed tx)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=10;" edge="1" parent="1" source="w_vault" target="o_vault">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x3" value="read value / EMA" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=10;" edge="1" parent="1" source="w_vault" target="o_volidx">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x4" value="fetch + verify snapshot" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=10;" edge="1" parent="1" source="w_vault" target="e_walrus">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x5" value="writes JSON" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=10;" edge="1" parent="1" source="m_run" target="w_json">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x6" value="fetch charts / APY" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;dashed=1;strokeColor=#999999;fontSize=10;" edge="1" parent="1" source="w_json" target="w_land">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x7" value="wallet JSON-RPC" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;dashed=1;strokeColor=#999999;fontSize=10;" edge="1" parent="1" source="w_lib" target="e_rpc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x8" value="read OracleSVI" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=10;" edge="1" parent="1" source="k_vol" target="e_predict">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x9" value="atmIndexFromOracle()" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=10;" edge="1" parent="1" source="k_vol" target="s_svi">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x10" value="push (debounced)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=10;" edge="1" parent="1" source="k_vol" target="k_sui">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x11" value="vol_index::update&#10;(IndexPublisherCap)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=10;" edge="1" parent="1" source="k_sui" target="o_volidx">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x12" value="writeSnapshot()" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=10;" edge="1" parent="1" source="k_snap" target="s_walrus">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x13" value="PUT blob" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=10;" edge="1" parent="1" source="s_walrus" target="e_walrus">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x14" value="read NAV / state" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;dashed=1;strokeColor=#999999;fontSize=10;" edge="1" parent="1" source="k_snap" target="o_vault">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x15" value="blobId → track-record.json" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;dashed=1;strokeColor=#999999;fontSize=10;" edge="1" parent="1" source="k_snap" target="w_json">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x16" value="predict::supply / withdraw&#10;(PLP)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=10;" edge="1" parent="1" source="o_strat" target="e_predict">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x17" value="take_for_strategy / report&#10;(StrategyCap)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;fontSize=10;" edge="1" parent="1" source="o_strat" target="o_vault">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x18" value="roll: allocate / divest / harvest&#10;(Phase 4)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;dashed=1;strokeColor=#999999;fontSize=10;" edge="1" parent="1" source="k_sui" target="o_strat">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x19" value="JSON-RPC" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;dashed=1;strokeColor=#999999;fontSize=10;" edge="1" parent="1" source="k_sui" target="e_rpc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x20" value="mint / burn" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;dashed=1;strokeColor=#b07b00;fontSize=10;" edge="1" parent="1" source="o_vault" target="o_vstrata">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x21" value="uses" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;dashed=1;strokeColor=#b07b00;fontSize=10;" edge="1" parent="1" source="o_vault" target="o_math">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x22" value="fee accrual" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;dashed=1;strokeColor=#b07b00;fontSize=10;" edge="1" parent="1" source="o_vault" target="o_fees">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="x23" value="cap checks" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;dashed=1;strokeColor=#b07b00;fontSize=10;" edge="1" parent="1" source="o_vault" target="o_access">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

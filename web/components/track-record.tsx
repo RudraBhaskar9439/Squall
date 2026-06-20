@@ -2,32 +2,71 @@
 
 import { useEffect, useState } from "react";
 import { Reveal } from "./reveal";
-import { DECIMALS, walrusUrl, type TrackEntry } from "@/lib/strata";
+import {
+  DECIMALS,
+  walrusUrl,
+  walruscanUrl,
+  LIVE_SNAPSHOTS_KEY,
+  SNAPSHOT_EVENT,
+  SNAPSHOT_LABEL,
+  type TrackEntry,
+} from "@/lib/strata";
 
 const dusdc = (base: number) => (base / 10 ** DECIMALS.dusdc).toLocaleString(undefined, { maximumFractionDigits: 4 });
 const sharePrice = (e: TrackEntry) =>
   e.totalShares > 0 ? (e.navAssets / 10 ** DECIMALS.dusdc / (e.totalShares / 10 ** DECIMALS.vstrata)).toFixed(4) : "—";
 
+const LABEL = SNAPSHOT_LABEL.toUpperCase();
+
+function readLive(): TrackEntry[] {
+  try {
+    return JSON.parse(localStorage.getItem(LIVE_SNAPSHOTS_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
 export function TrackRecord() {
   const [entries, setEntries] = useState<TrackEntry[]>([]);
-  const [verified, setVerified] = useState<Record<number, boolean>>({});
+  const [verified, setVerified] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
+    let json: TrackEntry[] = [];
+
+    // merge committed (track-record.json) + live (localStorage) snapshots, newest first.
+    const merge = () => {
+      const byBlob = new Map<string, TrackEntry>();
+      [...json, ...readLive()].forEach((e) => byBlob.set(e.blobId, e));
+      setEntries([...byBlob.values()].sort((a, b) => b.tsMs - a.tsMs));
+    };
+
     fetch("/track-record.json")
       .then((r) => r.json())
-      .then((d) => setEntries(d.entries ?? []))
-      .catch(() => setEntries([]));
+      .then((d) => {
+        json = d.entries ?? [];
+        merge();
+      })
+      .catch(merge);
+
+    window.addEventListener(SNAPSHOT_EVENT, merge);
+    window.addEventListener("storage", merge);
+    return () => {
+      window.removeEventListener(SNAPSHOT_EVENT, merge);
+      window.removeEventListener("storage", merge);
+    };
   }, []);
 
   async function verify(e: TrackEntry) {
     try {
       const r = await fetch(walrusUrl(e.blobId));
       const blob = await r.json();
-      setVerified((v) => ({ ...v, [e.epoch]: blob.navAssets === e.navAssets }));
+      setVerified((v) => ({ ...v, [e.blobId]: blob.navAssets === e.navAssets }));
     } catch {
-      setVerified((v) => ({ ...v, [e.epoch]: false }));
+      setVerified((v) => ({ ...v, [e.blobId]: false }));
     }
   }
+
+  const total = entries.length;
 
   return (
     <section id="proof" className="relative mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-16 py-20 sm:py-28 lg:py-32">
@@ -37,22 +76,33 @@ export function TrackRecord() {
           A <span className="text-gradient">provable</span> track record
         </h2>
         <p className="mt-4 max-w-2xl text-white/55">
-          Every epoch's NAV, positions and rationale are written to Walrus as an immutable,
-          content-addressed blob. Anyone can re-fetch a snapshot and confirm it never changed —
-          a verifiable history no off-chain fund can offer.
+          Every vault action writes an immutable, content-addressed snapshot to Walrus — NAV,
+          positions and rationale. Each one re-fetches and verifies on demand, and links straight
+          to Walruscan. A live, verifiable history no off-chain fund can offer.
         </p>
       </Reveal>
 
       <div className="relative mt-14 space-y-4">
-        {entries.length === 0 && (
+        {total === 0 && (
           <div className="rounded-2xl border border-white/10 bg-[#0b2a40]/35 backdrop-blur-md p-6 text-sm text-white/40">
-            No snapshots yet.
+            No snapshots yet — make a deposit to write the first one.
           </div>
         )}
         {entries.map((e, i) => (
-          <Reveal key={e.epoch} delay={i * 0.06}>
-            <div className="grid items-center gap-4 rounded-2xl border border-white/10 bg-[#0b2a40]/35 backdrop-blur-md p-6 md:grid-cols-[auto_1fr_auto]">
-              <div className="font-mono text-sm text-sui">EPOCH {e.epoch}</div>
+          <Reveal key={e.blobId} delay={i * 0.06}>
+            <div
+              className={`grid items-center gap-4 rounded-2xl border bg-[#0b2a40]/35 backdrop-blur-md p-6 md:grid-cols-[auto_1fr_auto] ${
+                e.isLive ? "border-aqua/40" : "border-white/10"
+              }`}
+            >
+              <div className="font-mono text-sm text-sui">
+                {LABEL} #{total - i}
+                {e.isLive && (
+                  <span className="ml-2 rounded-full border border-aqua/40 bg-aqua/10 px-2 py-0.5 text-[10px] font-sans text-aqua">
+                    live
+                  </span>
+                )}
+              </div>
               <div>
                 <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm">
                   <span className="text-white/80">NAV <b className="font-mono">{dusdc(e.navAssets)}</b> DUSDC</span>
@@ -65,20 +115,20 @@ export function TrackRecord() {
                   {new Date(e.tsMs).toLocaleString()} · {e.rationale}
                 </div>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <button
                   onClick={() => verify(e)}
                   className="rounded-full border border-white/15 px-3 py-1.5 text-xs text-white/80 transition hover:bg-white/5"
                 >
-                  {verified[e.epoch] === undefined ? "Verify" : verified[e.epoch] ? "✓ verified" : "✗ mismatch"}
+                  {verified[e.blobId] === undefined ? "Verify" : verified[e.blobId] ? "✓ verified" : "✗ mismatch"}
                 </button>
                 <a
-                  href={walrusUrl(e.blobId)}
+                  href={walruscanUrl(e.blobId)}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-xs text-sui hover:text-aqua"
+                  className="rounded-full border border-sui/30 bg-sui/5 px-3 py-1.5 text-xs text-sui transition hover:bg-sui/10"
                 >
-                  Walrus ↗
+                  Walruscan ↗
                 </a>
               </div>
             </div>
