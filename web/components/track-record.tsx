@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSuiClient } from "@mysten/dapp-kit";
 import { Reveal } from "./reveal";
 import {
   DECIMALS,
@@ -9,8 +10,12 @@ import {
   LIVE_SNAPSHOTS_KEY,
   SNAPSHOT_EVENT,
   SNAPSHOT_LABEL,
+  PROOF,
   type TrackEntry,
 } from "@/lib/strata";
+
+// One on-chain anchor commitment, keyed by blobId.
+type Anchor = { nav: number; prevBlob: string };
 
 const LABEL = SNAPSHOT_LABEL;
 
@@ -46,8 +51,36 @@ function readLive(): TrackEntry[] {
 }
 
 export function TrackRecord() {
+  const client = useSuiClient();
   const [entries, setEntries] = useState<TrackEntry[]>([]);
   const [verified, setVerified] = useState<Record<string, boolean>>({});
+  // blobId -> on-chain anchor (empty until move/proof is deployed + PROOF set).
+  const [anchors, setAnchors] = useState<Map<string, Anchor>>(new Map());
+
+  // Read the on-chain ProofLog (if configured) so the history is anchored on
+  // Sui, not just in a file. Gated + fault-tolerant: any failure leaves the UI
+  // exactly as it was without anchoring.
+  useEffect(() => {
+    if (!PROOF.package || !PROOF.log) return;
+    let cancelled = false;
+    client
+      .getObject({ id: PROOF.log, options: { showContent: true } })
+      .then((obj) => {
+        const c = obj.data?.content;
+        const f = (c && "fields" in c ? c.fields : null) as { entries?: unknown[] } | null;
+        const m = new Map<string, Anchor>();
+        for (const el of f?.entries ?? []) {
+          const fl = ((el as { fields?: Record<string, unknown> })?.fields ?? el) as Record<string, unknown>;
+          const blobId = String(fl.blob_id ?? "");
+          if (blobId) m.set(blobId, { nav: Number(fl.nav_assets ?? 0), prevBlob: String(fl.prev_blob ?? "") });
+        }
+        if (!cancelled) setAnchors(m);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [client]);
 
   useEffect(() => {
     let json: TrackEntry[] = [];
@@ -77,13 +110,16 @@ export function TrackRecord() {
     try {
       const r = await fetch(walrusUrl(e.blobId));
       const blob = await r.json();
-      const navOk = blob.navAssets === e.navAssets;
+      const a = anchors.get(e.blobId); // on-chain commitment, if anchored
+      const blobPrev = typeof blob.prevBlob === "string" ? blob.prevBlob : "";
       const older = entries[i + 1];
-      const chainOk =
-        typeof blob.prevBlob === "string" && blob.prevBlob !== ""
-          ? !!older && blob.prevBlob === older.blobId
-          : true; // seed snapshots predate the hash-chain
-      setVerified((v) => ({ ...v, [e.blobId]: navOk && chainOk }));
+      // 1) Walrus contents match the source of truth (on-chain anchor if present).
+      const navOk = a ? blob.navAssets === a.nav : blob.navAssets === e.navAssets;
+      // 2) the blob's contents match the on-chain commitment.
+      const anchorOk = a ? blobPrev === a.prevBlob : true;
+      // 3) the hash-chain links to the previous entry.
+      const chainOk = blobPrev ? !!older && blobPrev === older.blobId : true;
+      setVerified((v) => ({ ...v, [e.blobId]: navOk && anchorOk && chainOk }));
     } catch {
       setVerified((v) => ({ ...v, [e.blobId]: false }));
     }
@@ -165,6 +201,14 @@ export function TrackRecord() {
                     className="rounded-full border border-white/15 px-1.5 py-0.5 text-[10px] text-white/45"
                   >
                     🔗 chained
+                  </span>
+                )}
+                {anchors.has(e.blobId) && (
+                  <span
+                    title="committed on-chain in the ProofLog"
+                    className="rounded-full border border-teal/40 bg-teal/10 px-1.5 py-0.5 text-[10px] text-teal"
+                  >
+                    ⛓ on-chain
                   </span>
                 )}
               </div>

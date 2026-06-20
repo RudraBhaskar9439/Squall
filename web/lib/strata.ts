@@ -28,6 +28,13 @@ export const walrusUrl = (blobId: string) => `${WALRUS_AGGREGATOR}/v1/blobs/${bl
 // Public Walrus blob explorer.
 export const walruscanUrl = (blobId: string) => `https://walruscan.com/testnet/blob/${blobId}`;
 
+// On-chain proof anchor (deploy move/proof, then set these to enable the
+// trustless, on-chain-anchored history). Empty = feature off, UI unchanged.
+export const PROOF = {
+  package: process.env.NEXT_PUBLIC_PROOF_PACKAGE ?? "",
+  log: process.env.NEXT_PUBLIC_PROOF_LOG ?? "",
+} as const;
+
 // Live, client-written snapshots shared between the dashboard and the proof tab.
 export const LIVE_SNAPSHOTS_KEY = "strata-live-snapshots";
 export const SNAPSHOT_EVENT = "strata:snapshot";

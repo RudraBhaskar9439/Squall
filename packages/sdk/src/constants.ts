@@ -21,3 +21,10 @@ export const STRATA = {
   adminCap: process.env.STRATA_ADMIN_CAP ?? "0x17652a0aa1e0b7aac15053eb8af4c878691be405f0769255a5176787781b0e9e",
   indexPublisherCap: process.env.STRATA_INDEX_CAP ?? "0x2b9523fefd8bfeeff0f94b87d31112faaad07c7764ec0bba2606b0f73e235876",
 } as const;
+
+// On-chain proof anchor (deploy move/proof, then set these). Empty = disabled.
+export const PROOF = {
+  package: process.env.PROOF_PACKAGE ?? "",
+  log: process.env.PROOF_LOG ?? "",
+  writerCap: process.env.PROOF_WRITER_CAP ?? "",
+} as const;

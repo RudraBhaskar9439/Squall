@@ -1,8 +1,17 @@
 import type { SuiClient } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import type { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
-import { STRATA } from "@strata/sdk";
+import { STRATA, PROOF } from "@strata/sdk";
 import type { ChainClient, OracleSnapshot, VaultState } from "../domain/types.ts";
+
+export type ProofAnchor = {
+  epoch: number;
+  tsMs: number;
+  navAssets: number;
+  totalShares: number;
+  blobId: string;
+  prevBlob: string;
+};
 
 function pu64(f: unknown): number {
   if (f == null) return 0;
@@ -68,5 +77,28 @@ export class SuiChainClient implements ChainClient {
     const content = obj.data?.content;
     const fields = (content && "fields" in content ? content.fields : {}) as Record<string, unknown>;
     return pu64(fields.value);
+  }
+
+  /** Commit a snapshot to the on-chain ProofLog (gated by the writer cap). */
+  async anchorProof(a: ProofAnchor): Promise<string> {
+    if (!PROOF.package || !PROOF.log || !PROOF.writerCap) {
+      throw new Error("PROOF_PACKAGE / PROOF_LOG / PROOF_WRITER_CAP not configured");
+    }
+    const tx = new Transaction();
+    tx.moveCall({
+      target: `${PROOF.package}::proof::anchor`,
+      arguments: [
+        tx.object(PROOF.log),
+        tx.object(PROOF.writerCap),
+        tx.pure.u64(a.epoch),
+        tx.pure.u64(a.tsMs),
+        tx.pure.u64(a.navAssets),
+        tx.pure.u64(a.totalShares),
+        tx.pure.string(a.blobId),
+        tx.pure.string(a.prevBlob),
+      ],
+    });
+    const res = await this.client.signAndExecuteTransaction({ signer: this.signer, transaction: tx });
+    return res.digest;
   }
 }
