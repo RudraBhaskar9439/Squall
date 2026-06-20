@@ -74,26 +74,23 @@
         </mxCell>
 
         <!-- ===================== WALRUS CONTAINER ===================== -->
-        <mxCell id="c_walrus" value="Walrus   ★ SPONSOR" style="rounded=10;whiteSpace=wrap;html=1;fillColor=#d4f3ea;strokeColor=#18a07a;strokeWidth=4;verticalAlign=top;align=left;fontStyle=1;fontSize=15;spacingTop=8;spacingLeft=14;" vertex="1" parent="1">
+        <mxCell id="c_walrus" value="Walrus   ★ SPONSOR   ·   hash-chained + anchored on Sui" style="rounded=10;whiteSpace=wrap;html=1;fillColor=#d4f3ea;strokeColor=#18a07a;strokeWidth=4;verticalAlign=top;align=left;fontStyle=1;fontSize=15;spacingTop=8;spacingLeft=14;" vertex="1" parent="1">
           <mxGeometry x="40" y="762" width="1180" height="306" as="geometry" />
         </mxCell>
-        <mxCell id="wal_web" value="&lt;b&gt;Proof tab (web)&lt;/b&gt;&lt;br&gt;&lt;br&gt;Anyone re-checks a past&lt;br&gt;epoch live.&lt;br&gt;&lt;b&gt;Trust by proof,&lt;br&gt;not by promise.&lt;/b&gt;" style="rounded=8;whiteSpace=wrap;html=1;fillColor=#eafaf4;strokeColor=#18a07a;fontSize=12;align=left;spacingLeft=8;" vertex="1" parent="1">
-          <mxGeometry x="60" y="850" width="175" height="170" as="geometry" />
+        <mxCell id="wal_web" value="&lt;b&gt;Proof tab (web)&lt;/b&gt;&lt;br&gt;&lt;br&gt;Anyone verifies live.&lt;br&gt;&lt;b&gt;Trust by proof,&lt;br&gt;not by promise.&lt;/b&gt;" style="rounded=8;whiteSpace=wrap;html=1;fillColor=#eafaf4;strokeColor=#18a07a;fontSize=12;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="850" width="205" height="170" as="geometry" />
         </mxCell>
-        <mxCell id="wal_verify" value="&lt;b&gt;re-fetch &amp; hash&lt;/b&gt;&lt;br&gt;&lt;br&gt;blobId IS the hash →&lt;br&gt;if it matches, the NAV&lt;br&gt;&lt;b&gt;never changed ✓&lt;/b&gt;" style="rounded=8;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#18a07a;fontSize=12;align=left;spacingLeft=8;" vertex="1" parent="1">
-          <mxGeometry x="253" y="850" width="175" height="170" as="geometry" />
+        <mxCell id="wal_verify" value="&lt;b&gt;re-fetch &amp; verify&lt;/b&gt;&lt;br&gt;&lt;br&gt;blob must match the&lt;br&gt;&lt;b&gt;on-chain anchor&lt;/b&gt; + chain link&lt;br&gt;(blobId is the content hash)" style="rounded=8;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#18a07a;fontSize=12;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="293" y="850" width="205" height="170" as="geometry" />
         </mxCell>
-        <mxCell id="wal_get" value="&lt;b&gt;aggregator&lt;/b&gt;&lt;br&gt;&lt;br&gt;GET&lt;br&gt;/v1/blobs/{blobId}" style="rounded=8;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#18a07a;fontSize=12;align=left;spacingLeft=8;" vertex="1" parent="1">
-          <mxGeometry x="446" y="850" width="175" height="170" as="geometry" />
+        <mxCell id="wal_proof" value="&lt;b&gt;ProofLog (on Sui)&lt;/b&gt;&lt;br&gt;&lt;br&gt;keeper anchors&lt;br&gt;{ epoch, NAV, blobId, prevBlob }&lt;br&gt;&lt;b&gt;complete, tamper-proof index&lt;/b&gt;" style="rounded=8;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;fontSize=12;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="526" y="850" width="205" height="170" as="geometry" />
         </mxCell>
-        <mxCell id="wal_store" value="&lt;b&gt;stored on nodes&lt;/b&gt;&lt;br&gt;&lt;br&gt;immutable · erasure-coded&lt;br&gt;→ returns &lt;b&gt;blobId&lt;/b&gt;&lt;br&gt;(content hash)" style="rounded=8;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#18a07a;fontSize=12;align=left;spacingLeft=8;" vertex="1" parent="1">
-          <mxGeometry x="639" y="850" width="175" height="170" as="geometry" />
+        <mxCell id="wal_store" value="&lt;b&gt;Walrus storage&lt;/b&gt;&lt;br&gt;&lt;br&gt;publisher PUT → erasure-coded&lt;br&gt;across nodes, kept ~1 yr&lt;br&gt;→ returns &lt;b&gt;blobId&lt;/b&gt; (content hash)" style="rounded=8;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#18a07a;fontSize=12;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="759" y="850" width="205" height="170" as="geometry" />
         </mxCell>
-        <mxCell id="wal_put" value="&lt;b&gt;publisher&lt;/b&gt;&lt;br&gt;&lt;br&gt;PUT&lt;br&gt;/v1/blobs?epochs=30" style="rounded=8;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#18a07a;fontSize=12;align=left;spacingLeft=8;" vertex="1" parent="1">
-          <mxGeometry x="832" y="850" width="175" height="170" as="geometry" />
-        </mxCell>
-        <mxCell id="wal_snap" value="&lt;b&gt;Snapshot (JSON)&lt;/b&gt;&lt;br&gt;&lt;br&gt;{ epoch, NAV, shares,&lt;br&gt;idle, deployed,&lt;br&gt;volIndex, rationale }" style="rounded=8;whiteSpace=wrap;html=1;fillColor=#eafaf4;strokeColor=#18a07a;fontSize=12;align=left;spacingLeft=8;" vertex="1" parent="1">
-          <mxGeometry x="1025" y="850" width="175" height="170" as="geometry" />
+        <mxCell id="wal_snap" value="&lt;b&gt;Snapshot (JSON)&lt;/b&gt;&lt;br&gt;&lt;br&gt;{ epoch, NAV, shares, idle,&lt;br&gt;deployed, volIndex, rationale,&lt;br&gt;&lt;b&gt;prevBlob&lt;/b&gt; }&lt;br&gt;&lt;b&gt;hash-chained&lt;/b&gt; to the previous" style="rounded=8;whiteSpace=wrap;html=1;fillColor=#eafaf4;strokeColor=#18a07a;fontSize=12;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="992" y="850" width="208" height="170" as="geometry" />
         </mxCell>
 
         <!-- ===================== INTERNAL ARROWS — DeepBook (unlabeled chain) ===================== -->
@@ -115,21 +112,26 @@
           </mxGeometry>
         </mxCell>
 
-        <!-- ===================== INTERNAL ARROWS — Walrus (unlabeled chain, right→left) ===================== -->
-        <mxCell id="e_w1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#18a07a;" edge="1" parent="1" source="wal_snap" target="wal_put">
+        <!-- ===================== INTERNAL ARROWS — Walrus (right→left: store, anchor on Sui, verify) ===================== -->
+        <mxCell id="e_w1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#18a07a;" edge="1" parent="1" source="wal_snap" target="wal_store">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_w2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#18a07a;" edge="1" parent="1" source="wal_put" target="wal_store">
+        <mxCell id="e_w2" value="anchor" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#d79b00;fontSize=11;" edge="1" parent="1" source="wal_store" target="wal_proof">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_w3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#18a07a;" edge="1" parent="1" source="wal_store" target="wal_get">
+        <mxCell id="e_w3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#18a07a;" edge="1" parent="1" source="wal_proof" target="wal_verify">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_w4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#18a07a;" edge="1" parent="1" source="wal_get" target="wal_verify">
+        <mxCell id="e_w4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#18a07a;" edge="1" parent="1" source="wal_verify" target="wal_web">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_w5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;strokeColor=#18a07a;" edge="1" parent="1" source="wal_verify" target="wal_web">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="e_w5" value="re-fetch blob" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;dashed=1;strokeWidth=2;strokeColor=#18a07a;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="wal_store" target="wal_verify">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="861" y="1038" />
+              <mxPoint x="395" y="1038" />
+            </Array>
+          </mxGeometry>
         </mxCell>
 
         <!-- ===================== MAIN STORY ARROWS (numbered, in clear lanes) ===================== -->

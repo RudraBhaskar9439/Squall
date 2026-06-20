@@ -62,7 +62,7 @@
         </mxCell>
 
         <!-- Walrus (SPONSOR) -->
-        <mxCell id="walrus" value="&lt;b&gt;Walrus&lt;/b&gt;  ★ SPONSOR&lt;br&gt;&lt;br&gt;Every epoch's NAV is written as an &lt;b&gt;immutable, content-addressed blob&lt;/b&gt;.&lt;br&gt;= a &lt;b&gt;verifiable track record&lt;/b&gt; anyone can re-fetch and check. Trust by proof, not promise." style="rounded=14;whiteSpace=wrap;html=1;fillColor=#d4f3ea;strokeColor=#18a07a;strokeWidth=4;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="walrus" value="&lt;b&gt;Walrus&lt;/b&gt;  ★ SPONSOR&lt;br&gt;&lt;br&gt;Each NAV snapshot is an &lt;b&gt;immutable, content-addressed blob&lt;/b&gt;, &lt;b&gt;hash-chained&lt;/b&gt; to the last and &lt;b&gt;anchored on Sui&lt;/b&gt;.&lt;br&gt;= a &lt;b&gt;verifiable track record&lt;/b&gt; anyone can re-fetch and check. Trust by proof, not promise." style="rounded=14;whiteSpace=wrap;html=1;fillColor=#d4f3ea;strokeColor=#18a07a;strokeWidth=4;fontSize=14;" vertex="1" parent="1">
           <mxGeometry x="290" y="690" width="420" height="135" as="geometry" />
         </mxCell>
 
