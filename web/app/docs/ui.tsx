@@ -29,7 +29,7 @@ export function Step({ n, t, children }: { n: string; t: string; children: React
     <li className="flex gap-4 rounded-xl border border-white/10 bg-[#0b2a40]/30 p-4">
       <span className="font-mono text-sm text-sui">{n}</span>
       <span>
-        <b className="text-white">{t}</b> — <span className="text-white/60">{children}</span>
+        <b className="text-white">{t}</b>: <span className="text-white/60">{children}</span>
       </span>
     </li>
   );

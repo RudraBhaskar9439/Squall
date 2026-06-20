@@ -3,12 +3,12 @@ import { Reveal } from "./reveal";
 const steps = [
   {
     t: "Deposit",
-    d: "Deposit USDC and receive vSTRATA — a composable share of the vault.",
+    d: "Deposit USDC and receive vSTRATA, a composable share of the vault.",
     icon: "M12 3v10m0 0l-4-4m4 4l4-4M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3",
   },
   {
     t: "Be the house",
-    d: "The vault supplies DeepBook Predict's PLP — earning a share of every trade.",
+    d: "The vault supplies DeepBook Predict's PLP, earning a share of every trade.",
     icon: "M12 3l9 5-9 5-9-5 9-5zM3 13l9 5 9-5",
   },
   {

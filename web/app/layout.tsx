@@ -8,7 +8,7 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Squall — Structured yield on DeepBook Predict",
+  title: "Squall: Structured yield on DeepBook Predict",
   description:
     "Tokenized ERC-4626 vaults on DeepBook Predict, powered by the first on-chain volatility index on Sui, with a verifiable track record on Walrus.",
 };

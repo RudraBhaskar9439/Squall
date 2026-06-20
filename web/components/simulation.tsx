@@ -47,13 +47,13 @@ export function Simulation() {
 
         <Reveal delay={0.1}>
           <div className="flex h-full flex-col justify-center gap-4 rounded-3xl border border-white/10 bg-[#0b2a40]/35 backdrop-blur-md p-6">
-            <div className="text-sm text-white/50">Monte Carlo averages ({sim?.monteCarlo.runs ?? "—"} runs)</div>
+            <div className="text-sm text-white/50">Monte Carlo averages ({sim?.monteCarlo.runs ?? "n/a"} runs)</div>
             <Metric label="APY" naive={sim?.monteCarlo.naive.apy} hedged={sim?.monteCarlo.hedged.apy} fmt={pct} />
             <Metric label="Max drawdown" naive={sim?.monteCarlo.naive.maxDrawdown} hedged={sim?.monteCarlo.hedged.maxDrawdown} fmt={pct} lowerBetter />
             <Metric label="Sharpe" naive={sim?.monteCarlo.naive.sharpe} hedged={sim?.monteCarlo.hedged.sharpe} fmt={(x) => x.toFixed(2)} higherBetter />
             <p className="mt-2 text-xs leading-relaxed text-white/40">
               Across random crash scenarios the hedge meaningfully lowers drawdown and lifts
-              risk-adjusted return for a small APY cost — capital preservation, on-chain.
+              risk-adjusted return for a small APY cost: capital preservation, on-chain.
             </p>
           </div>
         </Reveal>
@@ -69,14 +69,14 @@ export function Simulation() {
           </div>
           <p className="mt-4 text-pretty text-lg text-white/85 sm:text-xl">
             Being the house cut max drawdown to{" "}
-            <b className="font-semibold text-aqua">~20%</b> — versus{" "}
+            <b className="font-semibold text-aqua">~20%</b>, versus{" "}
             <b className="font-semibold text-grape">51%</b> for holding BTC over the same period,
             while staying positive.
           </p>
           <p className="mt-3 max-w-3xl text-xs leading-relaxed text-white/40">
             Reproducible: <code className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-white/70">pnpm backtest:historical</code> (dataset committed).
             Implied vol is proxied and the window is a BTC bull market, so absolute return is
-            illustrative — the drawdown comparison is the robust finding. Not a yield guarantee; you can lose.
+            illustrative; the drawdown comparison is the robust finding. Not a yield guarantee; you can lose.
           </p>
         </div>
       </Reveal>
@@ -137,10 +137,10 @@ function Metric({
     <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
       <div className="text-xs text-white/40">{label}</div>
       <div className="mt-2 flex items-baseline justify-between">
-        <span className="font-mono text-sm text-grape">{naive == null ? "—" : fmt(naive)}</span>
+        <span className="font-mono text-sm text-grape">{naive == null ? "n/a" : fmt(naive)}</span>
         <span className="text-[10px] text-white/30">naive → hedged</span>
         <span className={`font-mono text-sm ${win ? "text-teal" : "text-aqua"}`}>
-          {hedged == null ? "—" : fmt(hedged)}
+          {hedged == null ? "n/a" : fmt(hedged)}
         </span>
       </div>
     </div>

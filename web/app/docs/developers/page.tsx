@@ -1,7 +1,7 @@
 import { DocTitle, Lead, H2, P, Code } from "../ui";
 import { STRATA } from "@/lib/strata";
 
-export const metadata = { title: "Squall Docs — For developers" };
+export const metadata = { title: "Squall Docs: For developers" };
 
 export default function Developers() {
   return (

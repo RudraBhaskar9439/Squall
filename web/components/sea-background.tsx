@@ -57,7 +57,7 @@ export function SeaBackground() {
       <div className="glow left-[8%] top-[14%] h-[420px] w-[420px] bg-teal/12" />
       <div className="glow right-[10%] top-[40%] h-[460px] w-[460px] bg-sui/8" />
 
-      {/* swimming life — hero only */}
+      {/* swimming life: hero only */}
       <motion.div style={{ opacity: swimmers }} className="absolute inset-0">
         {SWIMMERS.map((l, i) => (
           <Swimmer key={i} {...l} />
@@ -75,7 +75,7 @@ export function SeaBackground() {
         />
       ))}
 
-      {/* coral reef — true footer only */}
+      {/* coral reef: true footer only */}
       <motion.div style={{ opacity: coralO, y: coralY }} className="absolute inset-x-0 bottom-0">
         <div className="absolute inset-x-0 bottom-0 h-[36vh] bg-gradient-to-t from-[#0a3a48]/35 to-transparent" />
         <Coral />

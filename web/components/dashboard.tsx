@@ -66,7 +66,7 @@ export function VaultDashboard() {
   }
 
   // After any vault action, snapshot the fresh on-chain NAV to Walrus so the
-  // proof tab updates instantly — the verifiable track record in real time.
+  // proof tab updates instantly, the verifiable track record in real time.
   async function recordSnapshot(action: string, detail: string) {
     try {
       toast.push({ variant: "info", title: "Recording proof to Walrus…", desc: "writing an immutable NAV snapshot" });
@@ -89,7 +89,7 @@ export function VaultDashboard() {
         idle: sIdle,
         deployed: sDeployed,
         volIndex: of ? pu64(of.value) : 0,
-        rationale: `${action} (${detail}) — NAV committed to Walrus`,
+        rationale: `${action} (${detail}): NAV committed to Walrus`,
       };
       const blobId = await writeSnapshotToWalrus(snap);
       const entry: TrackEntry = { ...snap, blobId, isLive: true };
@@ -192,7 +192,7 @@ export function VaultDashboard() {
         <div>
           <div className="text-2xl font-semibold">Earn on Predict</div>
           <p className="mt-1 text-sm text-white/55">
-            Deposit USDC. The vault is the house — it earns a share of trading fees. Withdraw anytime.
+            Deposit USDC. The vault is the house: it earns a share of trading fees. Withdraw anytime.
           </p>
         </div>
         <ConnectButton />
@@ -262,7 +262,7 @@ export function VaultDashboard() {
           <Detail label="Idle (not deployed)" value={`${fmt(idle, DECIMALS.dusdc)} USDC`} />
           <Detail label="Earning in Predict PLP" value={`${fmt(deployed, DECIMALS.dusdc)} USDC`} />
           <Detail label="Your shares (vSTRATA)" value={fmt(userVstrata, DECIMALS.vstrata)} />
-          <Detail label="Share price" value={totalShares > 0 ? (totalAssets / 10 ** DECIMALS.dusdc / (totalShares / 10 ** DECIMALS.vstrata)).toFixed(4) : "—"} />
+          <Detail label="Share price" value={totalShares > 0 ? (totalAssets / 10 ** DECIMALS.dusdc / (totalShares / 10 ** DECIMALS.vstrata)).toFixed(4) : "n/a"} />
         </div>
       )}
 

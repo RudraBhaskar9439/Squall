@@ -12,7 +12,7 @@ export function VaultCta() {
           </h2>
           <p className="relative mx-auto mt-4 max-w-xl text-white/60">
             Open the vault to deposit DUSDC, watch your balance grow, and verify every transaction on
-            Suiscan — with a full performance history on Walrus.
+            Suiscan, with a full performance history on Walrus.
           </p>
           <div className="relative mt-8 flex justify-center">
             <Link

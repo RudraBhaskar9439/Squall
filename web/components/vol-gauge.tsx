@@ -23,7 +23,7 @@ export function VolGauge() {
       <div className="flex items-start justify-between">
         <div>
           <div className="text-sm text-white/50">On-chain Volatility Index</div>
-          <p className="mt-1 text-xs text-white/40">The first vol benchmark on Sui — readable by any protocol.</p>
+          <p className="mt-1 text-xs text-white/40">The first vol benchmark on Sui, readable by any protocol.</p>
         </div>
         <span className="rounded-full border border-teal/30 bg-teal/5 px-2.5 py-1 text-[10px] font-medium tracking-wide text-teal">
           ● LIVE
@@ -37,7 +37,7 @@ export function VolGauge() {
           animate={{ opacity: 1, y: 0 }}
           className="text-gradient text-6xl font-semibold leading-none"
         >
-          {isPending ? "—" : pct !== null ? `${pct.toFixed(2)}%` : "n/a"}
+          {isPending ? "…" : pct !== null ? `${pct.toFixed(2)}%` : "n/a"}
         </motion.div>
         {emaPct !== null && <div className="pb-1 text-sm text-white/40">EMA {emaPct.toFixed(2)}%</div>}
       </div>
@@ -57,7 +57,7 @@ export function VolGauge() {
         <span>100%</span>
       </div>
 
-      {/* metadata — fills the card with real signal */}
+      {/* metadata: fills the card with real signal */}
       <div className="mt-7 grid grid-cols-2 gap-3 text-xs">
         <Meta label="Source" value="Predict OracleSVI" />
         <Meta label="Pricing oracle" value="Block Scholes" />
@@ -66,7 +66,7 @@ export function VolGauge() {
       </div>
 
       <p className="mt-6 text-xs leading-relaxed text-white/45">
-        Derived from DeepBook Predict&apos;s SVI surface and published on-chain — so Squall, and any
+        Derived from DeepBook Predict&apos;s SVI surface and published on-chain, so Squall, and any
         other protocol, can price risk against one shared, verifiable benchmark.
       </p>
 

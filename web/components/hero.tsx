@@ -35,7 +35,7 @@ export function Hero() {
       <div className="glow left-[15%] top-[20%] h-[460px] w-[460px] bg-sui/30" />
       <div className="glow right-[15%] top-[30%] h-[420px] w-[420px] bg-grape/25" />
 
-      {/* animated wave — full-bleed, behind everything */}
+      {/* animated wave: full-bleed, behind everything */}
       <motion.div
         style={{ scale: waveScale, y: waveY, opacity: waveOpacity }}
         className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
@@ -52,7 +52,7 @@ export function Hero() {
         }}
       />
 
-      {/* hero copy — floats over the wave */}
+      {/* hero copy: floats over the wave */}
       <motion.div
         style={{ y: panelY, opacity: panelOpacity }}
         variants={container}
@@ -78,7 +78,7 @@ export function Hero() {
           variants={item}
           className="mx-auto mt-6 max-w-xl text-pretty text-base text-white/70 drop-shadow-[0_2px_16px_rgba(0,0,0,0.7)] sm:text-lg"
         >
-          The Ribbon Finance of Sui — tokenized vaults on DeepBook Predict, powered by the first
+          The Ribbon Finance of Sui. Tokenized vaults on DeepBook Predict, powered by the first
           on-chain volatility index on Sui, with a verifiable track record on Walrus.
         </motion.p>
         <motion.div variants={item} className="mt-9 flex flex-wrap items-center justify-center gap-3">

@@ -95,7 +95,7 @@ export function TrackRecord() {
           A <span className="text-gradient">provable</span> track record
         </h2>
         <p className="mt-4 max-w-2xl text-white/55">
-          Every vault action writes an immutable, content-addressed snapshot to Walrus — NAV,
+          Every vault action writes an immutable, content-addressed snapshot to Walrus: NAV,
           positions and rationale. Each one re-fetches and verifies on demand, and links straight
           to Walruscan. A live, verifiable history no off-chain fund can offer.
         </p>
@@ -104,14 +104,14 @@ export function TrackRecord() {
       {/* summary band */}
       <Reveal delay={0.05}>
         <div className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/5 sm:grid-cols-4">
-          <Stat label="Current NAV" value={newest ? `${n2(newest.navAssets)}` : "—"} unit="DUSDC" />
+          <Stat label="Current NAV" value={newest ? `${n2(newest.navAssets)}` : "n/a"} unit="DUSDC" />
           <Stat
             label="All-time return"
-            value={total > 1 ? `${ret >= 0 ? "+" : ""}${ret.toFixed(2)}%` : "—"}
+            value={total > 1 ? `${ret >= 0 ? "+" : ""}${ret.toFixed(2)}%` : "n/a"}
             valueClass={total > 1 ? (ret >= 0 ? "text-teal" : "text-rose-400") : ""}
           />
           <Stat label={`${LABEL}s`} value={String(total)} />
-          <Stat label="Live since" value={oldest ? dateUTC(oldest.tsMs) : "—"} />
+          <Stat label="Live since" value={oldest ? dateUTC(oldest.tsMs) : "n/a"} />
         </div>
       </Reveal>
 
@@ -131,7 +131,7 @@ export function TrackRecord() {
 
           {total === 0 && (
             <div className="px-6 py-8 text-sm text-white/40">
-              No snapshots yet — make a deposit to write the first one.
+              No snapshots yet. Make a deposit to write the first one.
             </div>
           )}
 

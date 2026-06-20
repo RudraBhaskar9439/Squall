@@ -3,7 +3,7 @@ import { Reveal } from "./reveal";
 const features = [
   {
     title: "ERC-4626 vaults",
-    body: "Faithful tokenized-vault semantics in Move — previews, conversions, and inflation-attack protection via a virtual-offset.",
+    body: "Faithful tokenized-vault semantics in Move: previews, conversions, and inflation-attack protection via a virtual-offset.",
     icon: "◳",
   },
   {
@@ -13,7 +13,7 @@ const features = [
   },
   {
     title: "Verifiable track record",
-    body: "Every vault action's NAV, PnL and rationale is written to Walrus — a provable, tamper-proof performance history.",
+    body: "Every vault action's NAV, PnL and rationale is written to Walrus: a provable, tamper-proof performance history.",
     icon: "✓",
   },
   {

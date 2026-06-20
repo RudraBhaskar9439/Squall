@@ -6,7 +6,7 @@ import { TrackRecord } from "@/components/track-record";
 import { Footer } from "@/components/footer";
 
 export const metadata = {
-  title: "Squall — Vault",
+  title: "Squall Vault",
   description: "Deposit, withdraw, and track your Squall vault position on Sui testnet.",
 };
 
@@ -21,7 +21,7 @@ export default function VaultPage() {
             Be the <span className="text-gradient">house</span>
           </h1>
           <p className="mt-3 max-w-2xl text-white/55">
-            Deposit USDC and earn a share of DeepBook Predict trading fees — hedged, managed, and
+            Deposit USDC and earn a share of DeepBook Predict trading fees: hedged, managed, and
             verifiable. No options knowledge required.
           </p>
         </Reveal>
@@ -31,7 +31,7 @@ export default function VaultPage() {
           <div className="mt-8 grid gap-4 sm:grid-cols-3">
             {[
               { n: "1", t: "Deposit USDC", d: "You receive a vault share token." },
-              { n: "2", t: "The vault earns", d: "It’s the house on Predict — earning fees from traders, with a hedge capping bad days." },
+              { n: "2", t: "The vault earns", d: "It’s the house on Predict, earning fees from traders, with a hedge capping bad days." },
               { n: "3", t: "Withdraw anytime", d: "Burn your shares to cash out your balance." },
             ].map((s) => (
               <div key={s.n} className="rounded-2xl border border-white/10 bg-[#0b2a40]/35 backdrop-blur-md p-5">
