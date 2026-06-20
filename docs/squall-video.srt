@@ -148,96 +148,100 @@ This is where Squall earns trust.
 
 38
 00:03:15,000 --> 00:03:22,000
-Every epoch, the keeper writes a snapshot of the vault to Walrus,
+Every epoch, the vault writes a snapshot to Walrus and gets back a blobId.
 
 39
-00:03:22,000 --> 00:03:26,000
-and gets back a blobId.
-
-40
-00:03:26,000 --> 00:03:32,000
+00:03:22,000 --> 00:03:28,000
 That blobId is a content hash, so the snapshot can never be quietly changed.
 
+40
+00:03:28,000 --> 00:03:36,000
+Each snapshot also embeds the previous one's id, forming a hash-chain you can't reorder or alter.
+
 41
-00:03:32,000 --> 00:03:39,000
-Anyone can re-fetch it and confirm the numbers never moved.
+00:03:36,000 --> 00:03:44,000
+And the keeper anchors each one on Sui, in a ProofLog recording the NAV and blobId.
 
 42
-00:03:39,000 --> 00:03:44,000
-Our Proof tab does exactly that, live.
+00:03:44,000 --> 00:03:51,000
+So the history is complete and tamper-proof: the on-chain log is the index.
 
 43
-00:03:44,000 --> 00:03:48,000
-Trust by proof, not by promise.
+00:03:51,000 --> 00:03:58,000
+To verify, anyone re-fetches the blob and checks it against the on-chain anchor.
 
 44
-00:03:48,000 --> 00:03:53,000
-And this isn't a mockup. Here's Squall, live on Sui testnet.
+00:03:58,000 --> 00:04:05,000
+Our Proof tab does exactly that, live. Trust by proof, not by promise.
 
 45
-00:03:53,000 --> 00:03:58,000
-I connect my wallet and deposit a hundred test USDC.
+00:04:05,000 --> 00:04:10,000
+And this isn't a mockup. Here's Squall, live on Sui testnet.
 
 46
-00:03:58,000 --> 00:04:04,000
-I approve, and I receive my vault shares, vSTRATA.
+00:04:10,000 --> 00:04:15,000
+I connect my wallet and deposit a hundred test USDC.
 
 47
-00:04:04,000 --> 00:04:09,000
-The toast gives me a transaction link. Let's follow it to Suiscan.
+00:04:15,000 --> 00:04:21,000
+I approve, and I receive my vault shares, vSTRATA.
 
 48
-00:04:09,000 --> 00:04:16,000
-Real testnet: a hundred USDC in, vault shares out, and the object is the Squall Vault.
+00:04:21,000 --> 00:04:26,000
+The toast gives me a transaction link. Let's follow it to Suiscan.
 
 49
-00:04:16,000 --> 00:04:23,000
-Here's our strategy on-chain, with real supply and withdraw calls into DeepBook Predict.
+00:04:26,000 --> 00:04:33,000
+Real testnet: a hundred USDC in, vault shares out, and the object is the Squall Vault.
 
 50
-00:04:23,000 --> 00:04:28,000
-Deposit, allocate, harvest, redeem, all verified on-chain.
+00:04:33,000 --> 00:04:40,000
+Here's our strategy on-chain, with real supply and withdraw calls into DeepBook Predict.
 
 51
-00:04:28,000 --> 00:04:34,000
-This gauge is our on-chain Vol Index, reading live.
+00:04:40,000 --> 00:04:45,000
+Deposit, allocate, harvest, redeem, all verified on-chain.
 
 52
-00:04:34,000 --> 00:04:40,000
-Here's the same VolIndex object on Suiscan, with the keeper's updates.
+00:04:45,000 --> 00:04:51,000
+This gauge is our on-chain Vol Index, reading live.
 
 53
-00:04:40,000 --> 00:04:45,000
-Now the proof. These are our NAV attestations.
+00:04:51,000 --> 00:04:57,000
+Here's the same VolIndex object on Suiscan, with the keeper's updates.
 
 54
-00:04:45,000 --> 00:04:51,000
-I click verify, and the app re-fetches the blob from Walrus and confirms it.
+00:04:57,000 --> 00:05:02,000
+Now the proof. These are our NAV attestations.
 
 55
-00:04:51,000 --> 00:04:58,000
-And here's that exact blob on Walruscan, by its content ID, immutable and public.
+00:05:02,000 --> 00:05:08,000
+I click verify, and the app re-fetches the blob from Walrus and confirms it.
 
 56
-00:04:58,000 --> 00:05:03,000
-Anyone can check it. Nothing here is taken on faith.
+00:05:08,000 --> 00:05:15,000
+And here's that exact blob on Walruscan, by its content ID, immutable and public.
 
 57
-00:05:03,000 --> 00:05:09,000
-And I can withdraw anytime, burn the shares, USDC back.
+00:05:15,000 --> 00:05:20,000
+Anyone can check it. Nothing here is taken on faith.
 
 58
-00:05:09,000 --> 00:05:18,000
-Deposit at the surface. Price risk off the first on-chain vol index on Sui.
+00:05:20,000 --> 00:05:26,000
+And I can withdraw anytime, burn the shares, USDC back.
 
 59
-00:05:18,000 --> 00:05:25,000
-Earn the spread as the house on DeepBook. Prove every number on Walrus.
+00:05:26,000 --> 00:05:35,000
+Deposit at the surface. Price risk off the first on-chain vol index on Sui.
 
 60
-00:05:25,000 --> 00:05:31,000
-That's Squall. Structured yield you don't have to trust. You can verify it.
+00:05:35,000 --> 00:05:42,000
+Earn the spread as the house on DeepBook. Prove every number on Walrus.
 
 61
-00:05:31,000 --> 00:05:35,000
+00:05:42,000 --> 00:05:48,000
+That's Squall. Structured yield you don't have to trust. You can verify it.
+
+62
+00:05:48,000 --> 00:05:52,000
 Live on Sui testnet now.
