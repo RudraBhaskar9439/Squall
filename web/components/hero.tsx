@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
 import { useRef } from "react";
 import { EASE } from "@/lib/anim";
 
@@ -18,8 +18,8 @@ export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
 
-  // wave drifts/scales away on scroll
-  const waveScale = useTransform(scrollYProgress, [0, 1], [1, 1.5]);
+  // wave drifts away on scroll (translate + fade only — no scale, so the
+  // blurred layer never has to re-rasterize while scrolling)
   const waveY = useTransform(scrollYProgress, [0, 1], [0, 140]);
   const waveOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   // glass panel parallax
@@ -37,8 +37,8 @@ export function Hero() {
 
       {/* animated wave: full-bleed, behind everything */}
       <motion.div
-        style={{ scale: waveScale, y: waveY, opacity: waveOpacity }}
-        className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
+        style={{ y: waveY, opacity: waveOpacity, willChange: "transform, opacity" }}
+        className="pointer-events-none absolute inset-0 z-0"
       >
         <BigWave />
       </motion.div>
@@ -109,42 +109,75 @@ export function Hero() {
   );
 }
 
+const D1 = "M-220 260 q150 -120 300 0 t300 0 t300 0 t300 0 t300 0 t300 0";
+const D2 = "M-220 300 q150 -90 300 0 t300 0 t300 0 t300 0 t300 0 t300 0";
+const D3 = "M-220 220 q150 -150 300 0 t300 0 t300 0 t300 0 t300 0 t300 0";
+
+// One drifting wave layer. Each layer is its own compositor texture: the only
+// thing that animates is a CSS transform (translateX), so the browser slides a
+// cached bitmap instead of repainting the path/blur each frame. The soft glow
+// uses a CSS blur (rasterized once) rather than an SVG filter (re-blurred per
+// frame — the original cause of the jank on low-end GPUs).
+function WaveLayer({
+  d,
+  width,
+  opacity,
+  dist,
+  duration,
+  blur = 0,
+  animate,
+}: {
+  d: string;
+  width: number;
+  opacity: number;
+  dist: number;
+  duration: number;
+  blur?: number;
+  animate: boolean;
+}) {
+  return (
+    <motion.div
+      className="absolute inset-0 flex items-center justify-center"
+      style={{
+        opacity,
+        filter: blur ? `blur(${blur}px)` : undefined,
+        willChange: "transform",
+      }}
+      animate={animate ? { x: [0, -dist, 0] } : undefined}
+      transition={{ duration, repeat: Infinity, ease: "easeInOut" }}
+    >
+      <svg viewBox="0 0 1200 520" className="w-[160vw] min-w-[1100px]" aria-hidden="true">
+        <path d={d} fill="none" stroke="url(#hw)" strokeWidth={width} strokeLinecap="round" />
+      </svg>
+    </motion.div>
+  );
+}
+
 function BigWave() {
-  const d1 = "M-220 260 q150 -120 300 0 t300 0 t300 0 t300 0 t300 0 t300 0";
-  const d2 = "M-220 300 q150 -90 300 0 t300 0 t300 0 t300 0 t300 0 t300 0";
-  const d3 = "M-220 220 q150 -150 300 0 t300 0 t300 0 t300 0 t300 0 t300 0";
+  const reduce = useReducedMotion();
+  const animate = !reduce;
 
   return (
-    <motion.svg
-      viewBox="0 0 1200 520"
-      className="w-[160vw] min-w-[1100px]"
-      initial={{ opacity: 0, scale: 0.92 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 1.3, ease: EASE }}
+    <motion.div
+      className="absolute inset-0"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1.2, ease: EASE }}
     >
-      <defs>
-        <linearGradient id="hw" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#6fbcf0" />
-          <stop offset="50%" stopColor="#4da2ff" />
-          <stop offset="100%" stopColor="#a78bfa" />
-        </linearGradient>
-        <filter id="blur" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="18" />
-        </filter>
-      </defs>
-      <motion.path
-        d={d3} fill="none" stroke="url(#hw)" strokeWidth="90" strokeLinecap="round"
-        opacity="0.20" filter="url(#blur)"
-        animate={{ x: [0, -300, 0] }} transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.path
-        d={d2} fill="none" stroke="url(#hw)" strokeWidth="34" strokeLinecap="round" opacity="0.5"
-        animate={{ x: [0, -200, 0] }} transition={{ duration: 13, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.path
-        d={d1} fill="none" stroke="url(#hw)" strokeWidth="58" strokeLinecap="round"
-        animate={{ x: [0, -260, 0] }} transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
-      />
-    </motion.svg>
+      {/* shared gradient (referenced by every layer) */}
+      <svg width="0" height="0" aria-hidden="true" className="absolute">
+        <defs>
+          <linearGradient id="hw" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#6fbcf0" />
+            <stop offset="50%" stopColor="#4da2ff" />
+            <stop offset="100%" stopColor="#a78bfa" />
+          </linearGradient>
+        </defs>
+      </svg>
+
+      <WaveLayer d={D3} width={90} opacity={0.2} blur={16} dist={300} duration={16} animate={animate} />
+      <WaveLayer d={D2} width={34} opacity={0.5} dist={200} duration={13} animate={animate} />
+      <WaveLayer d={D1} width={58} opacity={1} dist={260} duration={11} animate={animate} />
+    </motion.div>
   );
 }
