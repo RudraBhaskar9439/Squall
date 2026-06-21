@@ -1,207 +1,191 @@
-# Squall
+<div align="center">
 
-**The Ribbon Finance of Sui** — tokenized ERC-4626 structured-yield vaults on
-DeepBook Predict, powered by the first on-chain volatility index on Sui, with a
-verifiable performance track record on Walrus.
+# 🌀 Squall
 
-- **Primary track:** DeepBook Predict (Sui Overflow 2026)
-- **Bounty hedge:** Walrus (verifiable data / agent memory)
+**Structured yield on Sui, built on volatility.**
+
+Tokenized ERC-4626 vaults on DeepBook Predict, powered by the **first on-chain volatility index on Sui**, with a hash-chained, on-chain-anchored performance record on **Walrus**.
+
+[![Network](https://img.shields.io/badge/network-Sui%20testnet-6fbcf0)](https://suiscan.xyz/testnet/object/0xbc279cb0ce8622b5e27c787961b7b39a55ebea0cf6ad993bdea6a43bc55f3d9c)
+[![Track](https://img.shields.io/badge/Sui%20Overflow%202026-DeepBook%20Predict-4da2ff)](https://sui.io)
+[![Bounty](https://img.shields.io/badge/bounty-Walrus-18a07a)](https://walrus.xyz)
+[![Move](https://img.shields.io/badge/Move-2024-d79b00)](https://move-book.com)
+
+</div>
+
+---
+
+## The problem
+
+The first wave of DeFi option vaults (Ribbon, Friktion) did billions in volume, then collapsed in 2022. They died for two structural reasons:
+
+- **Underpriced auctions.** Weekly options auctions sold too cheap, leaking value to market makers.
+- **Naked vol selling.** Premiums were collected unhedged, so a single crash wiped out LPs and everyone left.
+
+Picking up pennies in front of a steamroller.
+
+## What Squall does
+
+Squall rebuilds structured vaults on Sui with both failure modes fixed:
+
+1. **Earn the spread, not a cheap auction.** The vault is a liquidity provider on **DeepBook Predict's** vol-surface-priced order book. It becomes *the house*, collecting the spread from real, recurring trading flow.
+2. **Hedged by design.** A tail overlay caps the per-period loss, the exact crash that killed the old vaults.
+3. **Provable, not promised.** Every vault action writes a snapshot to Walrus, hash-chained and anchored on-chain, so the track record can be independently verified rather than trusted.
+
+No options knowledge required: deposit USDC, receive a vault share token, withdraw anytime.
+
+---
 
 ## 🟢 Live on Sui testnet
 
-Full cycle verified end-to-end against **real DeepBook Predict**
-(see [`deployments/testnet.json`](deployments/testnet.json)):
+The full cycle is verified end-to-end against the **real DeepBook Predict** package. See [`deployments/testnet.json`](deployments/testnet.json).
 
 | Object | ID |
 |---|---|
-| Package | `0x6db7afe5…6d3f` |
-| Vault (DUSDC/vSTRATA) | `0xbc279cb0…3d9c` |
-| PredictStrategy | `0x32d8d720…9572` |
-| VolIndex | `0x75217375…7f0c` |
+| Package | `0x6db7afe5caa78f6c1caedf6546b44af1b1bdc35f6f4f8f3062e3b675f7396d3f` |
+| Vault (DUSDC / vSTRATA) | `0xbc279cb0ce8622b5e27c787961b7b39a55ebea0cf6ad993bdea6a43bc55f3d9c` |
+| PredictStrategy | `0x32d8d720b6d2fc49b9c068151db0c84a9bdccc2e4856e8e476c95715213d9572` |
+| VolIndex | `0x7521737597f1697c18cd4382a5ff43d62b89cef3667d1d8d02e48cdda9d67f0c` |
 
-Proven on-chain: `deposit 100 DUSDC → 100B vSTRATA` → `allocate 60 DUSDC into
-Predict PLP` → `divest → 60 DUSDC back + NAV report` → `redeem → DUSDC out`,
-plus a live `vol_index` update (65%) and **3 verifiable NAV snapshots stored on
-Walrus** (the in-app Proof tab re-fetches and verifies them).
+**Verified on-chain cycle:** `deposit 100 DUSDC → 100B vSTRATA` → `allocate 60 DUSDC into Predict PLP` → `divest → 60 DUSDC + NAV report` → `redeem → DUSDC out`, plus a live `vol_index` update (65%) and NAV snapshots stored, hash-chained, and re-verified on Walrus from the in-app Proof tab.
+
+---
+
+## How it works
+
+Squall is one continuous flow, from the user at the surface down to the storage seabed:
+
+```
+        You (LP)  ── deposit USDC / withdraw ──►  SQUALL VAULT  (ERC-4626, hedged)
+                                                      │  ▲
+                          prices every position       │  │  marks NAV each epoch
+                                                      ▼  │
+   Keeper ──reads OracleSVI──►  On-chain Vol Index ──►  PredictStrategy
+   (off-chain)                  (first on Sui)              │  supply / withdraw
+        │                                                   ▼
+        │ snapshot NAV each epoch                     DeepBook Predict (PLP)
+        ▼                                              earns the spread + tail hedge
+   Walrus  ──hash-chained blob──►  ProofLog (on Sui)  ──►  Proof tab: re-fetch + verify
+```
+
+1. **Price risk.** A keeper reads DeepBook Predict's `OracleSVI` volatility surface, computes the at-the-money implied volatility, and publishes it on-chain as the **Vol Index**, an EMA-smoothed, shared object that any protocol can read.
+2. **Be the house.** The vault supplies USDC into DeepBook Predict's PLP pool through a capability-gated strategy, earning the option-seller premium, marked to NAV every epoch, with a tail hedge capping the downside.
+3. **Prove it.** Each epoch the keeper writes a NAV snapshot to Walrus (immutable, content-addressed), embeds the previous snapshot's blob id to form a **hash-chain**, and anchors `{epoch, NAV, blobId, prevBlob}` on-chain in a `ProofLog`. The result is a track record that is complete (no epoch can be hidden) and tamper-evident.
+
+---
+
+## What Squall ships first on Sui
+
+| First | What it is |
+|---|---|
+| 🧭 **On-chain volatility index** | A shared `VolIndex` object derived from DeepBook Predict's vol surface, readable by any protocol. The fair, on-chain price of risk on Sui. |
+| 🏦 **Structured-yield vault** | Full ERC-4626 semantics in Move (`deposit / mint / withdraw / redeem` + previews + `convertTo*`), with virtual-offset inflation-attack protection. |
+| 🔐 **Provable track record** | Hash-chained Walrus snapshots, anchored on-chain, verifiable by anyone. Trust by proof, not by promise. |
+
+---
+
+## Risk, backtesting, and honesty
+
+> **Methodology.** The figures below come from a seeded simulation of the strategy logic (`sim/`), not an empirical fund track record. They demonstrate the strategy's *risk behaviour* (the hedge reduces drawdown). They are illustrative and reproducible, **not a yield guarantee. You can lose money.**
+
+**Monte Carlo (1y, 1000 runs):** the hedge gives up a little APY to cut the tail.
+
+| Strategy | APY | Max drawdown | Sharpe |
+|---|---|---|---|
+| Naive PLP (unhedged) | ~18.7% | 19.1% | lower |
+| **Squall (hedged)** | ~17.7% | **16.5%** | higher |
+
+- The hedge **lowered drawdown in 7 of 7 market regimes** in the robustness sweep (calm, normal, high-vol, thin/fat edge, conservative/aggressive sizing).
+- **Real BTC history (~2.7 years, through a real 51% crash):** being the house held max drawdown to **~20% vs 51%** for holding BTC, while staying positive.
+
+Run it yourself:
+
+```bash
+cd sim
+pnpm backtest             # 1-year path + 1000-scenario Monte Carlo
+pnpm stress               # robustness sweep, 7 regimes x 2000 runs
+pnpm backtest:historical  # empirical backtest on committed real BTC data
+```
 
 ---
 
 ## Monorepo layout
 
 ```
-strata/
-├── move/strata/          # Sui Move package (on-chain protocol)
-│   ├── sources/
-│   │   ├── math.move       # reusable fixed-point + ERC-4626 conversion math
-│   │   ├── access.move     # Admin / Keeper / Strategy capabilities
-│   │   ├── vstrata.move    # vSTRATA share token (one-time witness + treasury)
-│   │   ├── vault.move      # generic ERC-4626 vault core (strategy-agnostic)
-│   │   ├── fees.move           # management + performance fees (high-water mark)
-│   │   ├── vol_index.move      # on-chain volatility index (EMA-smoothed)
-│   │   └── predict_strategy.move # DeepBook Predict PLP premium-harvest strategy
-│   └── tests/              # Move unit tests (+ mock_strategy harness)
-├── packages/sdk/         # @strata/sdk: SVI vol math + testnet constants ✅
-├── keeper/               # off-chain automation (vol-index updater, mock+sui clients) ✅ skeleton
-├── web/                  # Next.js frontend (landing + dashboard + proof + backtest) ✅
-└── sim/                  # strategy backtest (naive vs hedged + Monte Carlo) ✅
+squall/
+├── move/
+│   ├── strata/                  # on-chain protocol (Sui Move 2024)
+│   │   └── sources/
+│   │       ├── math.move            # ERC-4626 conversion math + inflation guard
+│   │       ├── access.move          # Admin / Keeper / Strategy capabilities (vault-bound)
+│   │       ├── vstrata.move         # vSTRATA share token + treasury
+│   │       ├── vault.move           # generic ERC-4626 vault core (Vault<A, S>)
+│   │       ├── fees.move            # management + performance fees (high-water mark)
+│   │       ├── vol_index.move       # on-chain volatility index (EMA-smoothed)
+│   │       └── predict_strategy.move# DeepBook Predict PLP premium-harvest strategy
+│   └── proof/                   # standalone on-chain anchor (ProofLog + writer cap)
+├── packages/sdk/               # @strata/sdk: SVI vol math, Walrus blob I/O, constants
+├── keeper/                     # off-chain automation: vol-index updater, snapshotter, anchorer
+├── web/                        # Next.js app: landing, vault dashboard, proof tab, docs
+└── sim/                        # backtests: naive vs hedged, Monte Carlo, real BTC
 ```
 
-The Move design keeps the **vault core generic** (`Vault<A, S>`) so it works with
-any asset/strategy; the Predict-specific logic plugs in via a capability-bound
-strategy module (next phase).
+The vault core is **strategy-agnostic** (`Vault<A, S>`): the DeepBook-specific logic plugs in through a capability-bound strategy module, so the same vault works for any asset or strategy.
 
 ---
 
-## Build status
+## Quickstart
 
-| Module | Status | Tests |
-|---|---|---|
-| `math` (ERC-4626 math + inflation guard) | ✅ done | covered via vault |
-| `access` (capabilities, vault-bound) | ✅ done | ✅ |
-| `vstrata` (share token) | ✅ done | — |
-| `vault` (ERC-4626 core + strategy hooks + fee accrual) | ✅ done | ✅ |
-| `vol_index` (on-chain vol index) | ✅ done | ✅ 2 tests |
-| `fees` (mgmt/perf fee, high-water mark) | ✅ done | ✅ 4 tests |
-| `mock_strategy` (test harness) + integration cycle | ✅ done | ✅ 1 test |
-| `predict_strategy` (DeepBook Predict integration) | ✅ **deployed to testnet, full cycle verified** | ✅ live |
-| `@strata/sdk` (SVI vol math + constants) | ✅ done | ✅ 8 tests |
-| `keeper` (vol-index updater + clients) | ✅ skeleton | ✅ 4 tests |
-
-Run the off-chain tests:
+**Prerequisites:** [pnpm](https://pnpm.io), Node 18+, and [Sui CLI](https://docs.sui.io/guides/developer/getting-started/sui-install) ≥ 1.73 (for the Move package).
 
 ```bash
+# install workspace deps
 pnpm install
-pnpm -r test   # 8 SDK + 4 keeper
-```
-| `@strata/sdk` | ⏳ todo | — |
-| keeper services | ⏳ todo | — |
-| web frontend | ⏳ todo | — |
-| simulation | ⏳ todo | — |
 
-Run the on-chain tests:
+# run the web app (landing + vault + proof tab)
+pnpm --filter web dev        # http://localhost:3000
 
-```bash
-cd move/strata
-sui move test
+# off-chain tests (SDK + keeper)
+pnpm -r test
+
+# Move unit tests
+cd move/strata && sui move test
 ```
+
+Connect a Sui **testnet** wallet on the `/vault` page, grab dUSDC from the faucet, and deposit to mint vSTRATA. The Proof tab re-fetches each Walrus snapshot and verifies it against its on-chain anchor and chain link.
 
 ---
 
-## Build roadmap (phases)
+## Tech stack
 
-- **Phase 0 — Foundation & validation spike.** Toolchain, repo, dUSDC faucet,
-  read Predict codebase (`predict-testnet-4-16`), prove the 4 load-bearing calls
-  (supply/redeem, read OracleSVI, read NAV mark, write Walrus). *Gate: NAV read.*
-- **Phase 1 — ERC-4626 vault core.** ✅ **Done** (math, access, vstrata, vault, vol_index, tests).
-- **Phase 2 — Fees + integration tests.** ✅ **Done** (fees with HWM, mock strategy, full deposit→harvest→fee cycle).
-- **Phase 3 — DeepBook Predict integration.** 🔨 In progress — `predict_strategy`
-  written and typechecking against the real Predict package (`supply`/`withdraw`
-  on testnet pkg `0xf5ea2b37…5138`). **Remaining to deploy:** (1) dUSDC from the
-  faucet, (2) the real testnet package IDs for `deepbook` + `token` (placeholders
-  in the cloned manifests for now — ask the DeepBook Telegram), (3) publish + run
-  one live deposit→supply→harvest→withdraw cycle.
-- **Phase 4 — Keeper & auto-roll.** Event-driven roll loop, idempotent + resumable.
-
-### Local build setup
-
-The Move package depends on the DeepBook Predict source. Clone it next to `move/`:
-
-```bash
-git clone --branch predict-testnet-4-16 --depth 1 \
-  https://github.com/MystenLabs/deepbookv3.git deepbook-ref
-# set distinct addresses in deepbook-ref/packages/{predict,deepbook,token}/Move.toml
-# (predict = 0xf5ea2b37…5138; deepbook/token = placeholders until real IDs known)
-```
-
-Requires **Sui CLI ≥ 1.73** (matches testnet; older versions lack `coin_registry`).
-- **Phase 3 — Vol index wiring.** Keeper derives ATM IV from OracleSVI → `vol_index::update`.
-- **Phase 4 — Frontend.** zkLogin onboarding, deposit/withdraw, NAV/APY, vol gauge.
-- **Phase 5 — Walrus track record.** Per-epoch snapshots (MemWal + raw-blob fallback).
-- **Phase 6 — Simulation.** Backtest premium-harvest + hedge; drawdown comparison.
-- **Phase 7 — Stretch, polish, submission.** Hedge overlay, demo video, deck.
+- **On-chain:** Sui Move 2024 (ERC-4626 vault, capability security, shared objects)
+- **Sponsors:** DeepBook Predict (vol-priced order book + OracleSVI), Walrus (decentralized storage)
+- **Off-chain:** TypeScript keeper (`@mysten/sui`), SVI implied-vol math
+- **Frontend:** Next.js + dapp-kit, deployed on testnet
+- **Simulation:** seeded Monte Carlo + real-data backtests
 
 ---
 
-## Risk, backtesting & robustness
+## Roadmap
 
-> **Methodology (read this).** The figures below come from a **seeded Monte Carlo
-> simulation of the strategy logic** (`sim/`), not an empirical historical
-> backtest. Premiums scale with implied vol, realized moves are drawn from a
-> normal distribution plus an injected crash, and the hedge is modelled as a
-> per-epoch loss floor. It demonstrates the strategy's **risk behaviour** (the
-> hedge reduces drawdown) — it is **illustrative, reproducible, and NOT a
-> yield guarantee or a real track record.** Real returns depend on actual
-> Predict trading volume and the implied-vs-realized vol spread, which only
-> emerge on mainnet.
+- [x] ERC-4626 vault core, fees, capabilities, vol index, integration tests
+- [x] DeepBook Predict strategy, deployed and full-cycle verified on testnet
+- [x] Walrus track record: hash-chained snapshots + on-chain `ProofLog` anchor
+- [x] Backtests: Monte Carlo, regime sweep, real BTC
+- [ ] Keeper auto-roll loop (event-driven, idempotent, resumable)
+- [ ] Cumulative-drawdown hedge (protects slow multi-day declines)
+- [ ] Mainnet launch
 
-Run it yourself:
+---
 
-```bash
-cd sim
-pnpm backtest    # 1-year path + 1000-scenario Monte Carlo
-pnpm stress      # robustness sweep — 7 regimes × 2000 runs
-```
+## Disclaimer
 
-**Backtest (1y, 1000 Monte Carlo runs):** the hedge gives up a little APY to cut
-the tail — naive PLP ~18.7% APY / 19.1% max drawdown vs. hedged ~17.7% APY /
-**16.5% max drawdown**, higher Sharpe.
+Squall is experimental software on testnet. The backtests are illustrative simulations, not a forecast or a yield guarantee. Real yield depends on actual on-chain trading volume and the implied-versus-realized volatility spread, which only emerge at scale on mainnet. Nothing here is financial advice. **You can lose money.**
 
-**Robustness sweep — max drawdown, naive → hedged (2000 runs each):**
+---
 
-| Regime | naive DD | hedged DD | Sharpe (naive → hedged) |
-|---|---|---|---|
-| Calm (IV 35%) | 15.8% | **11.8%** | 0.30 → 0.43 |
-| Normal (IV 65%) | 18.9% | **16.3%** | 0.86 → 0.88 |
-| High vol (IV 110%) | 25.7% | **19.2%** | 1.21 → 1.57 |
-| Thin edge (realized 95%) | 23.6% | **20.7%** | 0.17 → 0.18 |
-| Fat edge (realized 80%) | 15.0% | **12.4%** | 1.76 → 1.80 |
-| Conservative (40% deployed) | 12.9% | **11.7%** | 0.86 → 0.69 |
-| Aggressive (80% deployed) | 24.7% | **20.8%** | 0.86 → 0.97 |
+<div align="center">
 
-The hedge **lowered drawdown in 7/7 regimes** and **improved Sharpe in 6/7** —
-the lone exception (low deployment) is the expected insurance-cost tradeoff when
-there's little tail risk to insure. Sound across regimes, and not curve-fit.
+Built for **Sui Overflow 2026** · DeepBook Predict track · Walrus bounty
 
-### Empirical backtest on real BTC history
-
-Run on **real BTC daily closes** (≈2.7 years, including BTC's actual 51%
-drawdown). Reproducible — the dataset is committed:
-
-```bash
-cd sim && pnpm backtest:historical
-```
-
-| Strategy (real BTC path) | Return (CAGR) | Max drawdown | Sharpe |
-|---|---|---|---|
-| Vol-selling vault (PLP) | ~50% | **20.3%** | 2.10 |
-| Squall (hedged) | ~31% | 20.3% | 1.43 |
-| **Hold BTC (benchmark)** | ~38% | **51.2%** | — |
-
-**The defensible, model-robust finding: being the house cut max drawdown to
-~20% vs BTC's 51%** — a far smoother ride than holding the underlying, while
-staying positive. (Drawdown *shape* is robust to assumptions; absolute return
-is not — see caveats.)
-
-**Honest methodology + caveats:**
-- Real price path → every realized move and drawdown is real. **Implied vol is
-  proxied** (trailing realized × ~1.05 vol-risk premium) since free historical
-  BTC IV isn't available — so absolute returns are assumption-sensitive and the
-  window is a BTC bull market; treat CAGR as illustrative, not a forecast.
-- It ignores fees/slippage and assumes Predict-like fills; **real yield depends
-  on actual on-chain volume**, which only exists at scale on mainnet.
-- The **per-epoch hedge protects single-day crashes** (see the Monte Carlo
-  above) but adds little against *slow multi-day* drawdowns — hence hedged ≈
-  naive drawdown here. A cumulative-drawdown hedge is future work. We report
-  this openly rather than hide it.
-- **Not a yield guarantee. You can lose.**
-
-## Key design decisions
-
-- **ERC-4626 semantics in Move** — full `deposit/redeem/mint/withdraw` previews +
-  `convertTo*` + `totalAssets`; rounding always favors the vault.
-- **Inflation-attack protection** — virtual-offset conversion (`offset_pow`
-  virtual shares + 1 virtual asset), mirroring OpenZeppelin's mitigation.
-- **NAV model** — cached `deployed_value`, refreshed on `report` (harvest), so
-  NAV reads stay O(1) and gas-cheap.
-- **Capability security** — every privileged action is gated by a cap bound to a
-  specific `vault_id`; a cap for vault A can't touch vault B.
+</div>
