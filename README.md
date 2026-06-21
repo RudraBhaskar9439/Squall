@@ -53,20 +53,11 @@ The full cycle is verified end-to-end against the **real DeepBook Predict** pack
 
 ## How it works
 
-Squall is one continuous flow, from the user at the surface down to the storage seabed:
+Squall is one continuous dive, from the user at the surface, through DeepBook's depths, down to the Walrus seabed:
 
-```
-        You (LP)  ── deposit USDC / withdraw ──►  SQUALL VAULT  (ERC-4626, hedged)
-                                                      │  ▲
-                          prices every position       │  │  marks NAV each epoch
-                                                      ▼  │
-   Keeper ──reads OracleSVI──►  On-chain Vol Index ──►  PredictStrategy
-   (off-chain)                  (first on Sui)              │  supply / withdraw
-        │                                                   ▼
-        │ snapshot NAV each epoch                     DeepBook Predict (PLP)
-        ▼                                              earns the spread + tail hedge
-   Walrus  ──hash-chained blob──►  ProofLog (on Sui)  ──►  Proof tab: re-fetch + verify
-```
+<div align="center">
+  <img src="docs/architecture.png" alt="Squall architecture: vault, on-chain vol index, DeepBook Predict, and hash-chained Walrus proof anchored on Sui" width="100%" />
+</div>
 
 1. **Price risk.** A keeper reads DeepBook Predict's `OracleSVI` volatility surface, computes the at-the-money implied volatility, and publishes it on-chain as the **Vol Index**, an EMA-smoothed, shared object that any protocol can read.
 2. **Be the house.** The vault supplies USDC into DeepBook Predict's PLP pool through a capability-gated strategy, earning the option-seller premium, marked to NAV every epoch, with a tail hedge capping the downside.
